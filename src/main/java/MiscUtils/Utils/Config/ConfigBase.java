@@ -21,7 +21,7 @@ public abstract class ConfigBase {
     public static final String CATEGORY_WORLDGEN = "WorldGen";
 
     public abstract Configuration GetConfigFile();
-    public abstract void InitConfig(String t);
+    public abstract void InitConfig();
     public abstract void LoadConfig();
 
     public abstract boolean IsWorldGeneratorEnabled(String Name);

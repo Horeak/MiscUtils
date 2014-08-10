@@ -1,4 +1,4 @@
-package MiscUtils.Utils;
+package MiscUtils.Utils.Register;
 
 import MiscUtils.Utils.Config.ConfigBase;
 import cpw.mods.fml.common.registry.GameRegistry;
