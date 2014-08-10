@@ -1,0 +1,59 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    }
+}
+
+apply plugin: 'forge'
+
+mod_version  = "1.0.0"
+minecraft_version = "1.7.10"
+forge_version = "10.13.0.1159"
+nei_version="1.0.2.15"
+ccc_version="1.0.2.9"
+
+group= "MiscUtils" 
+archivesBaseName = "MiscUtils"
+
+
+minecraft {
+version = minecraft_version + "-" + forge_version
+
+    replaceIn "MiscUtils.java"
+    replace "@VERSION@", mod_version
+}
+    version = "${minecraft_version}-${mod_version}"
+
+
+processResources {
+    // replace stuff in the files we want.
+    from(sourceSets.main.resources.srcDirs) {
+        include '*.info'
+
+        // replaces
+        expand 'version': version, 'buildnumber': "${System.getenv().BUILD_NUMBER}", 'minecraft_version': minecraft_version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude '**/*.info'
+    }
+	
+}
+
+dependencies {
+	compile files (
+		"Libs/CodeChickenCore-${minecraft_version}-${ccc_version}-dev.jar",
+		"Libs/NotEnoughItems-${minecraft_version}-${nei_version}-dev.jar",
+		)
+}
