@@ -4,6 +4,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
+
+/**
+ * Used from BuildCraft source
+ */
 public interface ISpecialInventory extends IInventory {
 
     /**

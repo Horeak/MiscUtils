@@ -7,6 +7,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
+/**
+ * Used from BuildCraft source
+ */
 public class Position {
 
         public double x, y, z;
@@ -47,27 +50,8 @@ public class Position {
                 z = tile.zCoord;
         }
 
-        public void moveRight(double step) {
-                switch (orientation) {
-                case SOUTH:
-                        x = x - step;
-                        break;
-                case NORTH:
-                        x = x + step;
-                        break;
-                case EAST:
-                        z = z + step;
-                        break;
-                case WEST:
-                        z = z - step;
-                        break;
-                default:
-                }
-        }
 
-        public void moveLeft(double step) {
-                moveRight(-step);
-        }
+
 
         public void moveForwards(double step) {
                 switch (orientation) {
@@ -93,26 +77,9 @@ public class Position {
                 }
         }
 
-        public void moveBackwards(double step) {
-                moveForwards(-step);
-        }
 
-        public void moveUp(double step) {
-                switch (orientation) {
-                case SOUTH:
-                case NORTH:
-                case EAST:
-                case WEST:
-                        y = y + step;
-                        break;
-                default:
-                }
 
-        }
 
-        public void moveDown(double step) {
-                moveUp(-step);
-        }
 
         public void writeToNBT(NBTTagCompound nbttagcompound) {
                 nbttagcompound.setDouble("i", x);

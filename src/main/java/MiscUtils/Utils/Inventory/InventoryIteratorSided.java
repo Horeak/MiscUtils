@@ -8,8 +8,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.Iterator;
 
 /**
-* @author CovertJaguar <http://www.railcraft.info>
-*/
+ * Used from BuildCraft source
+ */
 class InventoryIteratorSided implements Iterable<IInvSlot> {
 
     private final ISidedInventory inv;

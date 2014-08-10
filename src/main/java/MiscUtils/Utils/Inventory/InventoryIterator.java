@@ -6,6 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
+ * Used from BuildCraft source
+ *
 * @author CovertJaguar <http://www.railcraft.info>
 */
 public class InventoryIterator {

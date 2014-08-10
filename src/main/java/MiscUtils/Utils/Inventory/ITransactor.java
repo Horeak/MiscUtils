@@ -3,6 +3,9 @@ package MiscUtils.Utils.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
+/**
+ * Used from BuildCraft source
+ */
 public interface ITransactor {
 
     /**

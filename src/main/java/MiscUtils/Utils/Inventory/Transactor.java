@@ -5,6 +5,10 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
+/**
+ * Used from BuildCraft source
+ */
+
 public abstract class Transactor implements ITransactor {
 
     @Override
@@ -23,7 +27,7 @@ public abstract class Transactor implements ITransactor {
             else if (object instanceof ISidedInventory)
                     return new TransactorSimple((ISidedInventory) object);
             else if (object instanceof IInventory)
-                    return new TransactorSimple(Utils.getInventory((IInventory) object));
+                    return new TransactorSimple(InventoryUtils.getInventory((IInventory) object));
 
             return null;
     }

@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 import java.util.Iterator;
 
 /**
-* @author CovertJaguar <http://www.railcraft.info>
-*/
+ * Used from BuildCraft source
+ */
 class InventoryIteratorSimple implements Iterable<IInvSlot> {
 
         private final IInventory inv;

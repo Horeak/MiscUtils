@@ -8,6 +8,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Used from BuildCraft source
+ */
 public class TransactorSimple extends Transactor {
 
     protected IInventory inventory;

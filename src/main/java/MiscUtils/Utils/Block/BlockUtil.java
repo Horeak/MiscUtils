@@ -11,9 +11,9 @@ import net.minecraft.network.play.server.S27PacketExplosion;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.*;
 
 import java.util.List;
+
 
 public class BlockUtil {
 
@@ -59,91 +59,6 @@ public class BlockUtil {
             }
 
             world.setBlock(x, y, z, Blocks.air);
-    }
-
-    public static boolean canChangeBlock(World world, int x, int y, int z) {
-            return canChangeBlock(world.getBlock(x, y, z), world, x, y, z);
-    }
-
-    public static boolean isAnObstructingBlock(Block block, World world, int x, int y, int z) {
-
-            if (block == null || block.isAir(world, x, y, z))
-                    return false;
-            return true;
-    }
-
-    public static boolean canChangeBlock(Block block, World world, int x, int y, int z) {
-
-            if (block == Blocks.air || block == null || block.isAir(world, x, y, z))
-                    return true;
-
-            if (block.getBlockHardness(world, x, y, z) < 0)
-                    return false;
-
-
-            if (block == Blocks.lava || block == Blocks.flowing_lava)
-                    return false;
-
-            return true;
-    }
-
-
-
-
-
-    public static boolean isToughBlock(World world, int x, int y, int z) {
-    	Block block = world.getBlock(x, y, z);
-    	
-            return !block.getMaterial().isToolNotRequired();
-    }
-
-    public static boolean isFullFluidBlock(World world, int x, int y, int z) {
-            return isFullFluidBlock(world.getBlock(x, y, z), world, x, y, z);
-    }
-    
-
-    public static boolean isFullFluidBlock(Block block, World world, int x, int y, int z) {
-            if (block instanceof BlockFluidBase || block instanceof IFluidBlock)
-                    return world.getBlockMetadata(x, y, z) == 0;
-            return false;
-    }
-
-    public static Fluid getFluid(Block block) {
-            if (block instanceof IFluidBlock) {
-                    return ((IFluidBlock) block).getFluid();
-            } else if (block == Blocks.water || block == Blocks.flowing_water) {
-                    return FluidRegistry.WATER;
-            } else if (block == Blocks.lava || block == Blocks.flowing_lava) {
-                    return FluidRegistry.LAVA;
-            }
-            return null;
-    }
-
-    public static FluidStack drainBlock(World world, int x, int y, int z, boolean doDrain) {
-            return drainBlock(world.getBlock(x, y, z), world, x, y, z, doDrain);
-    }
-
-    public static FluidStack drainBlock(Block block, World world, int x, int y, int z, boolean doDrain) {
-            if (block instanceof IFluidBlock) {
-                    IFluidBlock fluidBlock = (IFluidBlock) block;
-                    if (fluidBlock.canDrain(world, x, y, z))
-                            return fluidBlock.drain(world, x, y, z, doDrain);
-            } else if (block == Blocks.water || block == Blocks.flowing_water) {
-                    int meta = world.getBlockMetadata(x, y, z);
-                    if (meta != 0)
-                            return null;
-                    if (doDrain)
-                            world.setBlockToAir(x, y, z);
-                    return new FluidStack(FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME);
-            } else if (block == Blocks.lava || block == Blocks.flowing_lava) {
-                    int meta = world.getBlockMetadata(x, y, z);
-                    if (meta != 0)
-                            return null;
-                    if (doDrain)
-                            world.setBlockToAir(x, y, z);
-                    return new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME);
-            }
-            return null;
     }
 
 

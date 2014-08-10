@@ -1,9 +1,6 @@
 package MiscUtils.Utils;
 
-import com.miscitems.MiscItemsAndBlocks.Utils.References.Colours;
-import com.miscitems.MiscItemsAndBlocks.Utils.References.Strings;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Comparator;
 
@@ -19,40 +16,7 @@ public class ItemHelper {
     }
 
 
-    public static int getColor(ItemStack itemStack) {
 
-        NBTTagCompound nbtTagCompound = itemStack.getTagCompound();
-
-        if (nbtTagCompound == null)
-            return Integer.parseInt(Colours.PURE_WHITE, 16);
-        else {
-
-            NBTTagCompound displayTagCompound = nbtTagCompound.getCompoundTag(Strings.NBT_ITEM_DISPLAY);
-            return displayTagCompound == null ? Integer.parseInt(Colours.PURE_WHITE, 16) : displayTagCompound.hasKey(Strings.NBT_ITEM_COLOR) ? displayTagCompound.getInteger(Strings.NBT_ITEM_COLOR) : Integer.parseInt(Colours.PURE_WHITE, 16);
-        }
-    }
-
-    public static void setColor(ItemStack itemStack, int color) {
-
-        if (itemStack != null) {
-
-            NBTTagCompound nbtTagCompound = itemStack.getTagCompound();
-
-            if (nbtTagCompound == null) {
-
-                nbtTagCompound = new NBTTagCompound();
-                itemStack.setTagCompound(nbtTagCompound);
-            }
-
-            NBTTagCompound colourTagCompound = nbtTagCompound.getCompoundTag(Strings.NBT_ITEM_DISPLAY);
-
-            if (!nbtTagCompound.hasKey(Strings.NBT_ITEM_DISPLAY)) {
-                nbtTagCompound.setTag(Strings.NBT_ITEM_DISPLAY, colourTagCompound);
-            }
-
-            colourTagCompound.setInteger(Strings.NBT_ITEM_COLOR, color);
-        }
-    }
 
 
     public static Comparator<ItemStack> ItemStackComparator = new Comparator<ItemStack>() {

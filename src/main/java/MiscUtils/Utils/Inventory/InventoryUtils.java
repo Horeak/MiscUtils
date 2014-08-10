@@ -1,6 +1,5 @@
 package MiscUtils.Utils.Inventory;
 
-import MiscItemsApi.Electric.IPowerTile;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.ItemStack;
@@ -9,11 +8,16 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-public class Utils {
+/**
+ * Used from BuildCraft source
+ */
+public class InventoryUtils {
 
-    public static final Random RANDOM = new Random();
     private static final List<ForgeDirection> directions = new ArrayList<ForgeDirection>(Arrays.asList(ForgeDirection.VALID_DIRECTIONS));
 
 
@@ -26,9 +30,7 @@ public class Utils {
 
                    
                    TileEntity tileInventory = world.getTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
-                   
-                   if(tileInventory instanceof IPowerTile)
-                	  continue;
+
                    
                    
                    ITransactor transactor = Transactor.getTransactorFor(tileInventory);
