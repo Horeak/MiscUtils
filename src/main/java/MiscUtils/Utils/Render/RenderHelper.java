@@ -1,5 +1,6 @@
 package MiscUtils.Utils.Render;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -11,9 +12,6 @@ import java.awt.*;
 public class RenderHelper {
 
 
-    static final boolean testflagColour = false;
-    static final boolean testflagIsFull3D = false;
-    static boolean wrongRendererMsgWritten = false;
 
     public static void RenderInventoryBlockWithColor(IItemRenderer.ItemRenderType renderType, ItemStack stack, Color color){
 
@@ -39,9 +37,10 @@ public class RenderHelper {
         }
 
 
+        Block bl = Block.getBlockFromItem(stack.getItem());
 
 
-        IIcon icon = stack.getItem().getIconFromDamage(5);
+        IIcon icon = bl.getIcon(5, stack.getItemDamage());
         tessellator.setNormal(1.0F, 0.0F, 0.0F);
          tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
         tessellator.addVertexWithUV(1.0, 0.0, 0.0, (double)icon.getMaxU(), (double)icon.getMaxV());
@@ -49,7 +48,7 @@ public class RenderHelper {
         tessellator.addVertexWithUV(1.0, 1.0, 1.0, (double)icon.getMinU(), (double)icon.getMinV());
         tessellator.addVertexWithUV(1.0, 0.0, 1.0, (double)icon.getMinU(), (double)icon.getMaxV());
 
-        icon = stack.getItem().getIconFromDamage(4);
+        icon = bl.getIcon(4, stack.getItemDamage());
         tessellator.setNormal(-1.0F, 0.0F, 0.0F);
          tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
         tessellator.addVertexWithUV(0.0, 0.0, 1.0, (double)icon.getMaxU(), (double)icon.getMaxV());
@@ -67,7 +66,7 @@ public class RenderHelper {
         tessellator.addVertexWithUV(1.0, 0.0, 0.0, (double)icon.getMinU(), (double)icon.getMaxV());
 
 
-        icon = stack.getItem().getIconFromDamage(3);
+        icon = bl.getIcon(3, stack.getItemDamage());
         tessellator.setNormal(0.0F, 0.0F, -1.0F);
          tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
         tessellator.addVertexWithUV(1.0, 0.0, 1.0, (double)icon.getMaxU(), (double)icon.getMaxV());
@@ -75,7 +74,7 @@ public class RenderHelper {
         tessellator.addVertexWithUV(0.0, 1.0, 1.0, (double)icon.getMinU(), (double)icon.getMinV());
         tessellator.addVertexWithUV(0.0, 0.0, 1.0, (double)icon.getMinU(), (double)icon.getMaxV());
 
-        icon = stack.getItem().getIconFromDamage(1);
+        icon = bl.getIcon(1, stack.getItemDamage());
         tessellator.setNormal(0.0F, 1.0F, 0.0F);
          tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
         tessellator.addVertexWithUV(1.0, 1.0, 1.0, (double)icon.getMaxU(), (double)icon.getMaxV());
@@ -83,7 +82,7 @@ public class RenderHelper {
         tessellator.addVertexWithUV(0.0, 1.0, 0.0, (double)icon.getMinU(), (double)icon.getMinV());
         tessellator.addVertexWithUV(0.0, 1.0, 1.0, (double)icon.getMinU(), (double)icon.getMaxV());
 
-        icon = stack.getItem().getIconFromDamage(0);
+        icon = bl.getIcon(0, stack.getItemDamage());
         tessellator.setNormal(0.0F, -1.0F, 0.0F);
          tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
         tessellator.addVertexWithUV(0.0, 0.0, 1.0, (double)icon.getMaxU(), (double)icon.getMaxV());
