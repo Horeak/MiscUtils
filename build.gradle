@@ -17,23 +17,29 @@ buildscript {
 
 apply plugin: 'forge'
 
-mod_version  = "1.0.0"
-minecraft_version = "1.7.10"
-forge_version = "10.13.0.1159"
-nei_version="1.0.2.15"
-ccc_version="1.0.2.9"
+//Get the config file
+ext.configFile = file "build.properties"
+ 
+//Read the config file.
+configFile.withReader {
+ 
+        def prop = new Properties()
+        prop.load(it)
+        ext.config = new ConfigSlurper().parse prop
+}
 
 group= "MiscUtils" 
+version = config.mod_version 
 archivesBaseName = "MiscUtils"
 
 
 minecraft {
-version = minecraft_version + "-" + forge_version
+  version = config.minecraft_version + "-" + config.forge_version
 
     replaceIn "MiscUtils.java"
-    replace "@VERSION@", mod_version
+    replace "@VERSION@", config.mod_version
 }
-    version = "${minecraft_version}-${mod_version}"
+  version = "${config.minecraft_version}-${config.mod_version}"
 
 
 processResources {
@@ -42,18 +48,40 @@ processResources {
         include '*.info'
 
         // replaces
-        expand 'version': version, 'buildnumber': "${System.getenv().BUILD_NUMBER}", 'minecraft_version': minecraft_version
+        expand 'version': version, 'buildnumber': "${System.getenv().BUILD_NUMBER}", 'minecraft_version': config.minecraft_version
     }
 
     from(sourceSets.main.resources.srcDirs) {
         exclude '**/*.info'
-    }
-	
+    }	
 }
 
-dependencies {
-	compile files (
-		"Libs/CodeChickenCore-${minecraft_version}-${ccc_version}-dev.jar",
-		"Libs/NotEnoughItems-${minecraft_version}-${nei_version}-dev.jar",
-		)
+//get MavenCentral.
+repositories {
+        mavenCentral()
 }
+ 
+//Prefix for jar will be 'universal'
+jar {
+        appendix = 'universal'
+}
+ 
+// add a source jar
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    appendix = 'src'
+}
+ 
+// because the normal output has been made to be obfuscated
+task deobfJar(type: Jar) {
+        from sourceSets.main.output
+        appendix = 'deobf'
+}
+ 
+//Create the jars. Located in /build/libs
+//The *-universal-* is the right one!
+artifacts {
+        archives sourceJar
+        archives deobfJar
+}
+
