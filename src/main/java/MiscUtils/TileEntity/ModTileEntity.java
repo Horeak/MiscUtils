@@ -88,7 +88,6 @@ public class ModTileEntity extends TileEntity {
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
-
         super.writeToNBT(nbtTagCompound);
 
     }

@@ -84,7 +84,7 @@ public class RenderHelper {
 
         icon = bl.getIcon(0, stack.getItemDamage());
         tessellator.setNormal(0.0F, -1.0F, 0.0F);
-         tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
+        tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
         tessellator.addVertexWithUV(0.0, 0.0, 1.0, (double)icon.getMaxU(), (double)icon.getMaxV());
         tessellator.addVertexWithUV(0.0, 0.0, 0.0, (double)icon.getMaxU(), (double)icon.getMinV());
         tessellator.addVertexWithUV(1.0, 0.0, 0.0, (double)icon.getMinU(), (double)icon.getMinV());

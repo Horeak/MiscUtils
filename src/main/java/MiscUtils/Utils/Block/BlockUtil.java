@@ -39,6 +39,35 @@ public class BlockUtil {
             breakBlock(world, x, y, z, 1200);
     }
 
+    public static void breakBlockToPlayer(World world, int x, int y, int z, EntityPlayer player){
+        if (!world.isAirBlock(x, y, z) && !world.isRemote && world.getGameRules().getGameRuleBooleanValue("doTileDrops")) {
+            Block block = world.getBlock(x, y, z);
+            List<ItemStack> items = block.getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+
+            for (ItemStack item : items) {
+
+                if(!player.capabilities.isCreativeMode)
+                if(player.inventory.addItemStackToInventory(item)){
+
+                }else{
+                    float var = 0.7F;
+                    double dx = world.rand.nextFloat() * var + (1.0F - var) * 0.5D;
+                    double dy = world.rand.nextFloat() * var + (1.0F - var) * 0.5D;
+                    double dz = world.rand.nextFloat() * var + (1.0F - var) * 0.5D;
+                    EntityItem entityitem = new EntityItem(world, player.posX + dx, player.posY + dy, player.posZ + dz, item);
+
+                    entityitem.lifespan = 1200;
+                    entityitem.delayBeforeCanPickup = 10;
+
+                    world.spawnEntityInWorld(entityitem);
+
+                }
+            }
+        }
+
+        world.setBlock(x, y, z, Blocks.air);
+    }
+
     public static void breakBlock(World world, int x, int y, int z, int forcedLifespan) {
             if (!world.isAirBlock(x, y, z) && !world.isRemote && world.getGameRules().getGameRuleBooleanValue("doTileDrops")) {
                     Block block = world.getBlock(x, y, z);
