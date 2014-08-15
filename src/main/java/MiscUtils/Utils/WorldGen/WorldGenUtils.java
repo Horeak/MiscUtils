@@ -2,6 +2,7 @@ package MiscUtils.Utils.WorldGen;
 
 import MiscUtils.Utils.Config.ConfigBase;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
@@ -23,9 +24,12 @@ public class WorldGenUtils {
                     list.add(Biomes[i]);
 
 
-            if(list.contains(world.getBiomeGenForCoords(x, y)) || list.size() <= 0)
-                for(int j = 0; j < Ch; j++)
+            if(list.contains(world.getBiomeGenForCoords(x, y)) || list.size() <= 0) {
+                if(world.getWorldInfo().getTerrainType() != WorldType.FLAT)
+                for (int j = 0; j < Ch; j++) {
                     gen.generate(world, rand, x + rand.nextInt(16), y + rand.nextInt(MaxY), z + rand.nextInt(16));
+                }
+            }
 
 
         }

@@ -1,4 +1,4 @@
-package MiscUtils.Utils.Block;
+package MiscUtils.Block;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.block.Block;
