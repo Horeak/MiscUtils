@@ -10,15 +10,17 @@ import java.util.Map;
 public class ChannelUtils {
 
     String Channel, ID;
+    public EnumMap<Side, FMLEmbeddedChannel> channels;
 
     public ChannelUtils(String Channel, String ModID){
         this.Channel = Channel;
         this.ID = ModID;
+        channels = getNewChannelHandler();
     }
 
     public ChannelHandler handler = new ChannelHandler(Channel);
 
-    public EnumMap<Side, FMLEmbeddedChannel> getNewChannelHandler()
+    private EnumMap<Side, FMLEmbeddedChannel> getNewChannelHandler()
     {
 
         EnumMap<Side, FMLEmbeddedChannel> handlers = NetworkRegistry.INSTANCE.newChannel(ID, handler);

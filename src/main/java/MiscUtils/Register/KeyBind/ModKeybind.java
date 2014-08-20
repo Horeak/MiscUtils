@@ -27,7 +27,7 @@ public abstract class ModKeybind extends KeyBinding {
         if(GameSettings.isKeyDown(this) && Minecraft.getMinecraft().currentScreen == null){
             if(Minecraft.getMinecraft().thePlayer != null){
                 EntityPlayer pl = Minecraft.getMinecraft().thePlayer;
-                PacketHandler.sendToServer(new SyncButtonClickEvent(pl, this), MiscUtils.channels);
+                PacketHandler.sendToServer(new SyncButtonClickEvent(pl, this), MiscUtils.Utils.channels);
                 OnActivated(pl, Side.CLIENT);
             }
 

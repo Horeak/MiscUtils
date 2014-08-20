@@ -8,16 +8,11 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.FMLEmbeddedChannel;
-import cpw.mods.fml.relauncher.Side;
-
-import java.util.EnumMap;
 
 @Mod(modid = "MiscUtils", name = "MiscUtilities", version = "@VERSION@")
 public class MiscUtils
 {
 
-    public static EnumMap<Side, FMLEmbeddedChannel> channels;
     public static ChannelUtils Utils;
 
 
@@ -30,7 +25,6 @@ public class MiscUtils
 
         Utils = new ChannelUtils("MiscUtilsChannel", "MiscUtils");
         RegisterPackets();
-        channels = Utils.getNewChannelHandler();
 
 
 
