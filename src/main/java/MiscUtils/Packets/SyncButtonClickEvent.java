@@ -42,8 +42,7 @@ public class SyncButtonClickEvent extends AbstractPacket {
             pl = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().func_152612_a(this.player);
         }
             if(key != null && pl != null) {
-
-                key.OnActivated(pl);
+                key.OnActivated(pl, side);
             }
         }
 
