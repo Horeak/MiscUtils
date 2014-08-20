@@ -1,6 +1,6 @@
 package MiscUtils.Utils;
 
-import MiscUtils.Utils.Config.ConfigBase;
+import MiscUtils.Config.ConfigBase;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
