@@ -65,7 +65,7 @@ public class ParticleHelper {
 
 
 
-    public void SpawnParticleRandomDr(String Name, double x, double y, double z, double width, double height, int amount){
+    public void SpawnParticleRandomDr(String Name, double x, double y, double z, double width, int amount){
         for (int i = 0; i < amount; ++i) {
             double d0 = rand.nextGaussian() * 0.02D;
             double d1 = rand.nextGaussian() * 0.02D;
@@ -74,5 +74,7 @@ public class ParticleHelper {
         }
 
     }
+
+
 
 }
