@@ -1,16 +1,15 @@
 package MiscUtils.Register.KeyBind;
 
-import MiscUtils.MiscUtils;
-import MiscUtils.Network.PacketHandler;
-import MiscUtils.Packets.SyncButtonClickEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 
+@SideOnly(Side.CLIENT)
 public abstract class ModKeybind extends KeyBinding {
     int Number;
 
@@ -19,7 +18,7 @@ public abstract class ModKeybind extends KeyBinding {
         this.Number = KeyNumber;
     }
 
-    public abstract void OnActivated(EntityPlayer player, Side side);
+    public abstract void OnActivated(EntityPlayer player);
 
 
     @SubscribeEvent
@@ -27,8 +26,7 @@ public abstract class ModKeybind extends KeyBinding {
         if(GameSettings.isKeyDown(this) && Minecraft.getMinecraft().currentScreen == null){
             if(Minecraft.getMinecraft().thePlayer != null){
                 EntityPlayer pl = Minecraft.getMinecraft().thePlayer;
-                PacketHandler.sendToServer(new SyncButtonClickEvent(pl, this), MiscUtils.Utils.channels);
-                OnActivated(pl, Side.CLIENT);
+                OnActivated(pl);
             }
 
         }

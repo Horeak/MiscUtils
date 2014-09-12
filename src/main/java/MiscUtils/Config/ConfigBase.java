@@ -11,8 +11,8 @@ import java.util.HashMap;
 public abstract class ConfigBase {
 
 
-    public static HashMap<Block, String> BlockConfigNames = new HashMap<Block, String>();
-    public static HashMap<Item, String> ItemConfigNames = new HashMap<Item, String>();
+    public HashMap<Block, String> BlockConfigNames = new HashMap<Block, String>();
+    public HashMap<Item, String> ItemConfigNames = new HashMap<Item, String>();
 
     public static final String CATEGORY_BLOCKS = "Blocks";
     public static final String CATEGORY_ITEMS = "Items";
@@ -52,6 +52,10 @@ public abstract class ConfigBase {
 
 
     public  boolean IsBlockEnabled(Block block){
+
+        if(GetConfigFile() == null)
+            return false;
+
         if(BlockConfigNames.get(block) == null)
             return false;
 
@@ -67,6 +71,9 @@ public abstract class ConfigBase {
 
 
     public  boolean IsItemEnabled(Item item){
+        if(GetConfigFile() == null)
+            return false;
+
         if(ItemConfigNames.get(item) == null)
             return false;
 
@@ -80,6 +87,10 @@ public abstract class ConfigBase {
 
 
     public  boolean IsWorldGeneratorEnabled(String WorldGen){
+
+        if(GetConfigFile() == null)
+            return false;
+
         boolean bl = GetConfigFile().get(CATEGORY_WORLDGEN, "Enable Worldgen: " + WorldGen, true).getBoolean(true);
 
         if(GetConfigFile().hasChanged())

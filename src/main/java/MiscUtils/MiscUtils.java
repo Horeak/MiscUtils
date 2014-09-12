@@ -1,13 +1,13 @@
 package MiscUtils;
 
 import MiscUtils.Network.ChannelUtils;
-import MiscUtils.Packets.SyncButtonClickEvent;
 import MiscUtils.Proxies.ServerProxy;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraft.launchwrapper.Launch;
 
 @Mod(modid = "MiscUtils", name = "MiscUtilities", version = "@VERSION@")
 public class MiscUtils
@@ -19,6 +19,8 @@ public class MiscUtils
     @SidedProxy(clientSide = "MiscUtils.Proxies.ClientProxy", serverSide = "MiscUtils.Proxies.ServerProxy")
     public static ServerProxy proxy;
 
+
+    public boolean IsLoadedInDev = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -46,7 +48,6 @@ public class MiscUtils
 
     public static void RegisterPackets(){
 
-        Utils.handler.RegisterPacket(SyncButtonClickEvent.class);
 
     }
 
