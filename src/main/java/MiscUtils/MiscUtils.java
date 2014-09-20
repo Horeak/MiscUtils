@@ -20,7 +20,7 @@ public class MiscUtils
     public static ServerProxy proxy;
 
 
-    public boolean IsLoadedInDev = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
+    public static boolean IsLoadedInDev = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {

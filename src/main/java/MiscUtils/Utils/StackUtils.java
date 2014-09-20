@@ -3,8 +3,11 @@ package MiscUtils.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class StackUtils
 {
@@ -29,6 +32,14 @@ public class StackUtils
             if(((List)ob).get(0) instanceof ItemStack){
                 return (ItemStack)((List)ob).get(0);
             }
+        }
+
+        if(ob instanceof String){
+            ArrayList<ItemStack> stacks = OreDictionary.getOres((String) ob);
+
+
+            if(stacks.size() > 0)
+            return OreDictionary.getOres((String)ob).get(new Random().nextInt(stacks.size()));
         }
 
         return null;

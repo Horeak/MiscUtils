@@ -1,6 +1,7 @@
 package MiscUtils.Register.KeyBind;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.settings.KeyBinding;
@@ -15,9 +16,12 @@ public class KeybindRegistry {
         return Keybinds.get(KeyCode);
     }
 
-    public static void RegisterKeybind(KeyBinding key){
+    public static void RegisterKeybind(ModKeybind key){
             Keybinds.put(key.getKeyDescription(), key);
             ClientRegistry.registerKeyBinding(key);
+            FMLCommonHandler.instance().bus().register(key);
+
+
 
     }
 

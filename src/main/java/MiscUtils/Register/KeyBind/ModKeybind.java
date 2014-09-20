@@ -23,6 +23,7 @@ public abstract class ModKeybind extends KeyBinding {
 
     @SubscribeEvent
     public void ButtonClickedEvent(InputEvent.KeyInputEvent event){
+
         if(GameSettings.isKeyDown(this) && Minecraft.getMinecraft().currentScreen == null){
             if(Minecraft.getMinecraft().thePlayer != null){
                 EntityPlayer pl = Minecraft.getMinecraft().thePlayer;
