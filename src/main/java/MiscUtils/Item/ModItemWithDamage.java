@@ -6,13 +6,17 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.EnumHelper;
 
 import java.util.List;
 
 public class ModItemWithDamage extends ItemTool{
+
+    public static Item.ToolMaterial NullMaterial = EnumHelper.addToolMaterial("NullMaterial", 0, 0, 0, 0, 0);
 
     @SideOnly(Side.CLIENT)
     public boolean isFull3D()
@@ -22,7 +26,7 @@ public class ModItemWithDamage extends ItemTool{
     int MaxDamage;
 
     protected ModItemWithDamage(int ItemMaxDamage) {
-        super(0, ToolMaterial.EMERALD, Sets.newHashSet());
+        super(0, NullMaterial, Sets.newHashSet());
         this.setMaxDamage(ItemMaxDamage);
 
         MaxDamage = ItemMaxDamage;

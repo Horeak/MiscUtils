@@ -71,7 +71,7 @@ public class StackUtils
 
 }
 
-    public static boolean AreStacksEqualFus(ItemStack stack1, ItemStack stack2){
+    public static boolean AreStacksEqualIgnoreDamage(ItemStack stack1, ItemStack stack2){
         return stack1 == null && stack2 == null ||
                 stack1 != null && stack2 == null ? false :
                 stack1 == null && stack2 != null ? false :
