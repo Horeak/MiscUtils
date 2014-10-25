@@ -29,6 +29,7 @@ public class StackUtils
 
 
         if(ob instanceof List){
+            if((List)ob != null && ((List)ob).size() > 0)
             if(((List)ob).get(0) instanceof ItemStack){
                 return (ItemStack)((List)ob).get(0);
             }

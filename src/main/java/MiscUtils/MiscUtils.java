@@ -2,6 +2,8 @@ package MiscUtils;
 
 import MiscUtils.Network.ChannelUtils;
 import MiscUtils.Proxies.ServerProxy;
+import MiscUtils.Utils.PlayerTickHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -35,6 +37,8 @@ public class MiscUtils
     @Mod.EventHandler
     public void Init(FMLInitializationEvent event){
 
+
+        FMLCommonHandler.instance().bus().register(new PlayerTickHandler());
     }
 
 
