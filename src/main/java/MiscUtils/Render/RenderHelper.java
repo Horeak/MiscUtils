@@ -25,6 +25,7 @@ public class RenderHelper {
 
 
 
+
         if(mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             if (mop.blockX == tile.xCoord && mop.blockY == tile.yCoord && mop.blockZ == tile.zCoord) {
 
@@ -33,14 +34,6 @@ public class RenderHelper {
                 float q = 0.8F;
                 float xOffset = (sideHit.offsetX * q), yOffset = (sideHit.offsetY * q), zOffset = (sideHit.offsetZ * q);
 
-                if(sideHit != ForgeDirection.UP)
-                    yOffset += 0.6F;
-
-                else if(sideHit == ForgeDirection.UP)
-                    yOffset += 0.4F;
-
-                else if(sideHit != ForgeDirection.DOWN)
-                yOffset += 0.4F;
 
                 GL11.glPushMatrix();
                 GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
@@ -56,7 +49,7 @@ public class RenderHelper {
                 double g = (block.getBlockBoundsMaxY() - block.getBlockBoundsMinY()) * 1.2;
 
                 GL11.glPushMatrix();
-                GL11.glTranslatef((float) x + 0.5F + xOffset, (float) y + (InfoStrings.size() * 0.21F) + yOffset, (float) z + 0.5F + zOffset);
+                GL11.glTranslatef((float) x + 0.5F + xOffset, (float) y + (InfoStrings.size() * 0.21F) + yOffset + ((float)g / 2), (float) z + 0.5F + zOffset);
                 GL11.glNormal3f(0.0F, 1.0F, 0.0F);
                 GL11.glRotatef(-manager.playerViewY, 0.0F, 1.0F, 0.0F);
                 GL11.glRotatef(manager.playerViewX, 1.0F, 0.0F, 0.0F);

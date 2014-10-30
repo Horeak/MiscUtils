@@ -9,6 +9,5 @@ public class PlayerTickHandler {
     public void RaytracingUpdate(TickEvent.PlayerTickEvent event){
         RayTracing.instance().fire();
 
-
     }
 }
