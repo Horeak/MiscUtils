@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 
 
 public abstract class ModBlockContainer extends ModBlock implements ITileEntityProvider {
-    protected ModBlockContainer(Material p_i45394_1_) {
+    public ModBlockContainer(Material p_i45394_1_) {
         super(p_i45394_1_);
         this.isBlockContainer = true;
 
