@@ -10,6 +10,7 @@ import MiscUtils.Proxies.ServerProxy;
 import MiscUtils.Register.BlockRegister;
 import MiscUtils.Register.ItemRegister;
 import MiscUtils.Utils.PlayerTickHandler;
+import MiscUtils.Utils.Recipe.RecipeUtils;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -60,6 +61,8 @@ public class MiscUtilsMain
 
 
         ItemUtils.Register(Guide, "GuideItem");
+
+        RecipeUtils.RegisterTypes();
 
     }
 

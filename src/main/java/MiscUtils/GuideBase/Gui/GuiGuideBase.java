@@ -1,11 +1,13 @@
 package MiscUtils.GuideBase.Gui;
 
+import MiscUtils.GuideBase.Gui.Utils.GuideItem;
 import MiscUtils.GuideBase.Gui.Utils.GuideModSelectionButton;
 import MiscUtils.GuideBase.Gui.Utils.GuideObjectButton;
 import MiscUtils.GuideBase.Gui.Utils.GuideRecipeButton;
 import MiscUtils.GuideBase.Gui.Utils.GuideTabSelectionButton;
 import MiscUtils.GuideBase.Registry.GuideModRegistry;
 import MiscUtils.GuideBase.Utils.GuideInstance;
+import MiscUtils.GuideBase.Utils.GuideRecipeTypeRender;
 import MiscUtils.GuideBase.Utils.GuideTab;
 import MiscUtils.GuideBase.Utils.ModGuideInstance;
 import MiscUtils.GuideBase.Utils.TextGuideTab;
@@ -24,6 +26,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,6 +47,11 @@ public class GuiGuideBase extends GuiScreen {
 
     public boolean ShowingObject = false;
     public ItemStack ObjectShowing = null;
+
+    //TODO Add recipe. Toggle when clicking the recipe icon. Add custom recipe handeling for RecipeUtils.java
+    public boolean ShowingRecipe = false;
+    public int CurrentRecipe, MaxRecipe;
+    public GuideRecipeTypeRender res;
 
     int xSizeOfTexture = 255, ySizeOfTexture = 208;
     double ScrollMax = 4.825;
@@ -225,7 +233,32 @@ public class GuiGuideBase extends GuiScreen {
                 java.util.List list = fontRendererObj.listFormattedStringToWidth(Text, TextLength);
                 lines = list.size();
 
-                int PerPage = 16;
+
+                int Offset = 0;
+
+                if(ShowingRecipe){
+                    MaxRecipe = (RecipeUtils.GetTotalRecipeAmountFor(ObjectShowing) - 1);
+
+                    if(CurrentRecipe > MaxRecipe)
+                        CurrentRecipe = MaxRecipe;
+
+                    if(RecipeUtils.GetRecipeAt(ObjectShowing, CurrentRecipe) != null)
+                    res = RecipeUtils.GetRecipeAt(ObjectShowing, CurrentRecipe);
+
+                    Minecraft.getMinecraft().renderEngine.bindTexture(res.GetRenderTexture());
+
+                    drawTexturedModalRect(posX + 50, posY + 30, res.GetRenderPositionX(), res.GetRenderPositionY(), res.GetRenderXSize(), res.GetRenderYSize());
+                    res.RenderExtras(this, posX, posY);
+
+                    textY += res.GetRenderYSize();
+                    Offset = res.GetRenderYSize();
+
+
+                }
+
+
+
+                int PerPage = 16 - (Offset / 10);
                 double trans = (lines) / (ScrollMax);
 
                 double transs = (trans * InfoScroll);
@@ -243,7 +276,7 @@ public class GuiGuideBase extends GuiScreen {
                     for (int line = lineMin; line < lineMax; line++) {
 
                         if (list.size() > line)
-                            fontRendererObj.drawString((String) list.get(line), posX + textX, ((posY + textY + 30 + ((line - lineMin) * 10))), new Color(107, 107, 107).getRGB(), false);
+                            fontRendererObj.drawString((String) list.get(line), posX + textX, ((posY + textY + 20 + ((line - lineMin) * 10))), new Color(107, 107, 107).getRGB(), false);
 
                     }
 
@@ -265,7 +298,7 @@ public class GuiGuideBase extends GuiScreen {
         //Render tooltip info/names
         for (int i = 0; i < buttonList.size(); i++) {
             GuiButton btn = (GuiButton) buttonList.get(i);
-            if (btn != null && btn.func_146115_a()) {
+            if (btn != null && btn.func_146115_a() && btn.enabled) {
 
                 if (btn instanceof GuideModSelectionButton) {
                     GuideModSelectionButton el = (GuideModSelectionButton) btn;
@@ -284,16 +317,43 @@ public class GuiGuideBase extends GuiScreen {
                         java.util.List temp = Arrays.asList(desc);
                         drawHoveringText(temp, x, y, fontRendererObj);
                     }
-                }else if(btn instanceof GuideRecipeButton){
-                    GuideRecipeButton el = (GuideRecipeButton)btn;
+                }else if(btn instanceof GuideRecipeButton) {
+                    GuideRecipeButton el = (GuideRecipeButton) btn;
                     if (el != null && el != null) {
-                        String[] desc = {StatCollector.translateToLocal("guide.hover.recipeAviable")};
+                        String[] desc = {StatCollector.translateToLocal("guide.hover.recipeAviable"), EnumChatFormatting.GRAY + (ShowingRecipe ? StatCollector.translateToLocal("guide.hover.recipeHide") : StatCollector.translateToLocal("guide.hover.recipeShow"))};
 
                         java.util.List temp = Arrays.asList(desc);
                         drawHoveringText(temp, x, y, fontRendererObj);
                     }
 
-             }
+                } else if(btn instanceof GuideItem){
+                    GuideItem el = (GuideItem)btn;
+                        if (el != null && el.stack != null) {
+                            String[] desc = {el.stack.getDisplayName()};
+
+                            java.util.List temp = Arrays.asList(desc);
+                            drawHoveringText(temp, x, y, fontRendererObj);
+                        }
+
+
+
+             }else{
+                    if(btn.displayString == "<"){
+                        String[] desc = {StatCollector.translateToLocal("guide.hover.prevRecipe")};
+
+                        java.util.List temp = Arrays.asList(desc);
+                        drawHoveringText(temp, x, y, fontRendererObj);
+
+
+                    }else if(btn.displayString == ">"){
+                        String[] desc = {StatCollector.translateToLocal("guide.hover.nextRecipe")};
+
+                        java.util.List temp = Arrays.asList(desc);
+                        drawHoveringText(temp, x, y, fontRendererObj);
+                    }
+
+
+                }
 
         }
 
@@ -314,6 +374,10 @@ public class GuiGuideBase extends GuiScreen {
 
             ObjectShowing = null;
             ShowingObject = false;
+            ShowingRecipe = false;
+
+            CurrentRecipe = 0;
+            MaxRecipe = 0;
         }
 
         if(button instanceof GuideTabSelectionButton) {
@@ -321,11 +385,36 @@ public class GuiGuideBase extends GuiScreen {
 
             ObjectShowing = null;
             ShowingObject = false;
+            ShowingRecipe = false;
+
+            CurrentRecipe = 0;
+            MaxRecipe = 0;
         }
 
         if(button instanceof GuideObjectButton) {
             ObjectShowing = ((GuideObjectButton) button).stack;
             ShowingObject = true;
+            ShowingRecipe = false;
+
+            CurrentRecipe = 0;
+            MaxRecipe = 0;
+        }
+
+        if(button instanceof GuideRecipeButton){
+            ShowingRecipe ^= true;
+
+            if(ShowingRecipe)
+            res = RecipeUtils.GetRecipeAt(ObjectShowing, 0);
+
+            CurrentRecipe = 0;
+            MaxRecipe = 0;
+        }
+
+        if(button.displayString == "<"){
+            CurrentRecipe -= 1;
+
+        }else if(button.displayString == ">"){
+            CurrentRecipe += 1;
         }
 
 
@@ -348,8 +437,8 @@ public class GuiGuideBase extends GuiScreen {
 
         if(Current != null && Current.guide.GuideTabs.size() > 0)
             for(int i = 0; i < Current.guide.GuideTabs.size(); i++){
-
                 GuideTab instance = Current.guide.GuideTabs.get(i);
+
                 buttonList.add(new GuideTabSelectionButton(buttonList.size() + 1, posX + 233, (posY + 3) + (i * 27), instance, currentTab != null ? currentTab.Name.equalsIgnoreCase(instance.Name) : false));
             }
 
@@ -389,9 +478,31 @@ public class GuiGuideBase extends GuiScreen {
 
             }
         }else{
-            //Add recipe button if item has more then 0 recipes. (Need to improve GetRecipes method. Read TO-DO RecipeUtils
-            if(RecipeUtils.GetRecipes(ObjectShowing).size() > 0){
-                buttonList.add(new GuideRecipeButton(buttonList.size() + 1, posX + 165, posY + 9));
+
+
+            if(RecipeUtils.GetTotalRecipeAmountFor(ObjectShowing) > 0){
+                buttonList.add(new GuideRecipeButton(buttonList.size() + 1, posX + 165, posY + 9, ShowingRecipe));
+            }
+
+            if(ShowingRecipe){
+                GuiButton bt = new GuiButton(buttonList.size() + 1, posX + 35, posY + 50, 15, 20, "<");
+                bt.enabled = CurrentRecipe > 0;
+
+                buttonList.add(bt);
+
+
+                GuiButton bt2 = new GuiButton(buttonList.size() + 1, posX + 51 + res.GetRenderXSize(), posY + 50, 15, 20, ">");
+                bt2.enabled = CurrentRecipe < MaxRecipe;
+
+                buttonList.add(bt2);
+
+
+                for(GuideItem itm : res.AddItemsFor(posX + 50, posY + 30, new ArrayList<GuideItem>(), ObjectShowing)){
+                    itm.id = buttonList.size() + 1;
+                    buttonList.add(itm);
+
+
+                }
 
             }
 

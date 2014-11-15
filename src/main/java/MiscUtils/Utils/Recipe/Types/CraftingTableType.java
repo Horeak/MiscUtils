@@ -1,0 +1,144 @@
+package MiscUtils.Utils.Recipe.Types;
+
+import MiscUtils.GuideBase.Gui.Utils.GuideItem;
+import MiscUtils.GuideBase.Utils.GuideRecipeTypeRender;
+import MiscUtils.Utils.StackUtils;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
+
+import java.util.ArrayList;
+
+public class CraftingTableType extends GuideRecipeTypeRender{
+
+
+    @Override
+    public int GetRenderXSize() {
+        return 124;
+    }
+
+    @Override
+    public int GetRenderYSize() {
+        return 62;
+    }
+
+    @Override
+    public int GetRenderPositionX() {
+        return 25;
+    }
+
+    @Override
+    public int GetRenderPositionY() {
+        return 12;
+    }
+
+    @Override
+    public ResourceLocation GetRenderTexture() {
+        return new ResourceLocation("textures/gui/container/crafting_table.png");
+    }
+
+    @Override
+    public ItemStack[] GetRequiredItemsFor(ItemStack stack) {
+        ItemStack[] stacks = new ItemStack[9];
+
+        for(Object r : CraftingManager.getInstance().getRecipeList()){
+            if(r instanceof IRecipe){
+                IRecipe re = (IRecipe)r;
+
+                if(StackUtils.AreStacksEqual(re.getRecipeOutput(), stack)){
+                    if(re instanceof ShapelessRecipes){
+                        for(int i = 0; i < ((ShapelessRecipes)re).recipeItems.size(); i++){
+                            Object g = ((ShapelessRecipes)re).recipeItems.get(i);
+                            stacks[i] = StackUtils.GetObject(g);
+                        }
+
+                    }else if(re instanceof ShapedRecipes){
+                        for(int i = 0; i < ((ShapedRecipes)re).recipeItems.length; i++){
+                            Object g = ((ShapedRecipes)re).recipeItems[i];
+                            stacks[i] = StackUtils.GetObject(g);
+                        }
+
+                        //TODO Fix ore dictionary recipes!
+                    }else if(re instanceof ShapedOreRecipe){
+                        for(int i = 0; i < StackUtils.GetMultiObject(((ShapedOreRecipe)re).getInput()).length; i++){
+                            Object g = StackUtils.GetMultiObject(((ShapedOreRecipe)re).getInput())[i];
+                            stacks[i] = StackUtils.GetObject(g);
+                        }
+
+                    }else if(re instanceof ShapelessOreRecipe){
+                        for(int i = 0; i < StackUtils.GetMultiObject(((ShapelessOreRecipe)re).getInput()).length; i++){
+                            Object g = StackUtils.GetMultiObject(((ShapelessOreRecipe)re).getInput())[i];
+                            stacks[i] = StackUtils.GetObject(g);
+                        }
+                    }
+
+
+                }
+            }
+
+        }
+
+
+        return stacks;
+    }
+
+    //TODO Returning true some times even when no recipes
+    @Override
+    public boolean ContainsRecipeFor(ItemStack stack) {
+        ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+
+        for(ItemStack st : GetRequiredItemsFor(stack)){
+            if(st != null)
+                list.add(st);
+
+        }
+
+        return list.size() > 0;
+    }
+
+    @Override
+    public int GetRecipesAmountFor(ItemStack stack) {
+        int i = 0;
+
+        for(Object r : CraftingManager.getInstance().getRecipeList()){
+            if(r instanceof IRecipe) {
+                IRecipe res = (IRecipe) r;
+
+                if(StackUtils.AreStacksEqual(res.getRecipeOutput(), stack)){
+                    i += 1;
+                }
+
+
+            }
+        }
+
+
+        return i;
+    }
+
+    //TODO Fix the actual recipes. (Look at silver ingot recipe) (it combines every available recipe into one....)
+    @Override
+    public ArrayList<GuideItem> AddItemsFor(int PosX, int PosY, ArrayList<GuideItem> ListToAddTo, ItemStack stack) {
+       ItemStack[] stacks = GetRequiredItemsFor(stack);
+
+
+        for(int y = 0; y < 3; y++){
+            for(int x = 0; x < 3; x++){
+                ListToAddTo.add(new GuideItem(0, PosX + 5 + (x * 18), PosY + 5 + (y * 18), stacks[x+y * 3]));
+            }
+
+        }
+
+
+        ListToAddTo.add(new GuideItem(0, PosX + 99, PosY + 23, stack));
+
+
+        return ListToAddTo;
+    }
+
+}

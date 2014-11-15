@@ -26,6 +26,7 @@ public abstract class GuideInstance {
 
     public void RegisterTab(GuideTab tab){
         GuideTabs.add(tab);
+
     }
 
 }

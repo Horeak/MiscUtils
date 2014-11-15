@@ -1,35 +1,78 @@
 package MiscUtils.Utils.Recipe;
 
+import MiscUtils.GuideBase.Utils.GuideRecipeTypeRender;
+import MiscUtils.Utils.Recipe.Types.CraftingTableType;
+import MiscUtils.Utils.Recipe.Types.FuranceCraftingType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 
 import java.util.ArrayList;
 
 public class RecipeUtils {
 
-    //TODO Add a system where modders can register a recipe type to allow MiscUtils to get recipes from it
+    public static ArrayList<GuideRecipeTypeRender> RecipeTypeRenders = new ArrayList<GuideRecipeTypeRender>();
 
-    //Only crafting table and furnace recipes!
-    @Deprecated
-    public static ArrayList<IRecipe> GetRecipes(ItemStack stack){
-        ArrayList<IRecipe> res = new ArrayList<IRecipe>();
+    public static void RegisterTypes(){
+
+        RecipeTypeRenders.add(new CraftingTableType());
+        RecipeTypeRenders.add(new FuranceCraftingType());
+
+    }
 
 
-        for(Object r : CraftingManager.getInstance().getRecipeList()){
-            if(r instanceof IRecipe) {
-                IRecipe rec = (IRecipe) r;
+    public static GuideRecipeTypeRender GetRecipeAt(ItemStack stack, int num){
+        int g = 0;
+        if(GetTotalRecipeAmountFor(stack) >= num){
+            for(GuideRecipeTypeRender res : GetRecipesFor(stack)){
 
-                if(rec.getRecipeOutput() != null)
-                if (rec.getRecipeOutput().getItem() == stack.getItem()) {
-                    res.add(rec);
+                if(g == num){
+                    return res;
                 }
+
+                g += 1;
+
+            }
+
+        }
+
+        return null;
+    }
+
+
+    public static ArrayList<GuideRecipeTypeRender> GetRecipesFor(ItemStack stack){
+        ArrayList<GuideRecipeTypeRender> res = new ArrayList<GuideRecipeTypeRender>();
+
+        for(GuideRecipeTypeRender red : RecipeTypeRenders){
+            if(red.ContainsRecipeFor(stack)){
+                res.add(red);
             }
         }
 
 
-        for(Object r : FurnaceRecipes.smelting().getSmeltingList().values()){
+        return res;
+    }
+
+    public static int GetTotalRecipeAmountFor(ItemStack stack){
+        int num = 0;
+
+        for(GuideRecipeTypeRender res : RecipeTypeRenders){
+            if(res.ContainsRecipeFor(stack))
+                num += res.GetRecipesAmountFor(stack);
+        }
+
+
+        return num;
+    }
+
+
+
+    @Deprecated
+    public static ArrayList<IRecipe> GetCraftingRecipes(ItemStack stack){
+        ArrayList<IRecipe> res = new ArrayList<IRecipe>();
+
+
+        for(Object r : CraftingManager.getInstance().getRecipeList()){
             if(r instanceof IRecipe) {
                 IRecipe rec = (IRecipe) r;
 

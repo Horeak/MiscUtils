@@ -15,6 +15,7 @@ public class StackUtils
 
     public static ItemStack GetObject(Object ob){
 
+
      if(ob == null)
          return null;
 
@@ -26,7 +27,6 @@ public class StackUtils
 
         if(ob instanceof ItemStack)
             return (ItemStack)ob;
-
 
         if(ob instanceof List){
             if((List)ob != null && ((List)ob).size() > 0)
