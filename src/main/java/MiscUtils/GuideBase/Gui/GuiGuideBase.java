@@ -48,7 +48,6 @@ public class GuiGuideBase extends GuiScreen {
     public boolean ShowingObject = false;
     public ItemStack ObjectShowing = null;
 
-    //TODO Add recipe. Toggle when clicking the recipe icon. Add custom recipe handeling for RecipeUtils.java
     public boolean ShowingRecipe = false;
     public int CurrentRecipe, MaxRecipe;
     public int CurrentRecipeType, MaxRecipeType;
@@ -217,8 +216,6 @@ public class GuiGuideBase extends GuiScreen {
 
 
             int Offset = 0;
-
-
             if(ShowingRecipe){
                 MaxRecipeType = RecipeUtils.GetTotalDifferentRecipeTypes(ObjectShowing) - 1;
 
@@ -241,7 +238,9 @@ public class GuiGuideBase extends GuiScreen {
 
                     super.drawScreen(x, y, f);
 
-                    drawCenteredString(fontRendererObj, StatCollector.translateToFallback(res.GetName()), posX + 100, posY + 20, new Color(165, 165, 165).getRGB());
+                    String nm = EnumChatFormatting.UNDERLINE + StatCollector.translateToFallback(res.GetName());
+
+                    fontRendererObj.drawString(nm, posX + 100 - fontRendererObj.getStringWidth(nm) / 2, posY + 20, new Color(108, 108, 108).getRGB(), false);
 
                     textY += res.GetRenderYSize();
                     Offset = res.GetRenderYSize();
@@ -250,6 +249,8 @@ public class GuiGuideBase extends GuiScreen {
 
             }else{
 
+                //Handles rendering of buttons when not showing a recipe
+                GL11.glColor4f(1F, 1F, 1F, 1F);
                 super.drawScreen(x, y, f);
 
             }
@@ -258,9 +259,8 @@ public class GuiGuideBase extends GuiScreen {
 
 
             if(Text != null && !Text.isEmpty()) {
-                int lines = 0;
                 java.util.List list = fontRendererObj.listFormattedStringToWidth(Text, TextLength);
-                lines = list.size();
+                int lines = list.size();
 
                 int PerPage = 16 - (Offset / 10);
                 double trans = (lines) / (ScrollMax);
@@ -293,6 +293,7 @@ public class GuiGuideBase extends GuiScreen {
             }
         }else{
 
+            //Handles default rendering of buttons
             GL11.glColor4f(1F, 1F, 1F, 1F);
             super.drawScreen(x, y, f);
         }
@@ -441,17 +442,27 @@ public class GuiGuideBase extends GuiScreen {
             //Remove for loops to allow items that are not registered to be able to be viewed.
             //TODO Allow accessing pages that are not registered? have them show the recipe and a blank page? only allow items that have a recipe?
 
-            if(!StackUtils.AreStacksEqual(ObjectShowing, gd.stack)){
+            if(!StackUtils.AreStacksEqualIgnoreDamage(ObjectShowing, gd.stack)){
                 for(ModGuideInstance inst : GuideModRegistry.ModArray){
                     for(GuideTab tab : inst.guide.GuideTabs){
                         for(Object r : tab.list){
                             ItemStack stack = StackUtils.GetObject(r);
 
-                            if(StackUtils.AreStacksEqual(stack, gd.stack)){
+                            if(StackUtils.AreStacksEqualIgnoreDamage(stack, gd.stack)){
                                 ResetObjectPageInfo();
 
-                                ObjectShowing = gd.stack;
+                                ItemStack ccp = gd.stack.copy();
+
+                                ccp.setItemDamage(0);
+
+                                ObjectShowing = ccp;
                                 ShowingObject = true;
+
+                                if(!tab.Name.equalsIgnoreCase(currentTab.Name))
+                                    currentTab = tab;
+
+                                if(!Current.Id.equalsIgnoreCase(inst.Id))
+                                    Current = inst;
                             }
 
                         }
@@ -474,7 +485,7 @@ public class GuiGuideBase extends GuiScreen {
 
         for(int i = 0; i < GuideModRegistry.ModArray.size(); i++){
             GuideInstance instance = GuideModRegistry.ModArray.get(i).guide;
-            buttonList.add(new GuideModSelectionButton(buttonList.size() + 1, posX  - 2, (posY + 3) + (i * 27), instance, Current != null ? Current.guide.ModPageName().equalsIgnoreCase(instance.ModPageName()) : false));
+            buttonList.add(new GuideModSelectionButton(0, posX  - 2, (posY + 3) + (i * 27), instance, Current != null ? Current.guide.ModPageName().equalsIgnoreCase(instance.ModPageName()) : false));
         }
 
 
@@ -482,7 +493,7 @@ public class GuiGuideBase extends GuiScreen {
             for(int i = 0; i < Current.guide.GuideTabs.size(); i++){
                 GuideTab instance = Current.guide.GuideTabs.get(i);
 
-                buttonList.add(new GuideTabSelectionButton(buttonList.size() + 1, posX + 233, (posY + 3) + (i * 27), instance, currentTab != null ? currentTab.Name.equalsIgnoreCase(instance.Name) : false));
+                buttonList.add(new GuideTabSelectionButton(0, posX + 233, (posY + 3) + (i * 27), instance, currentTab != null ? currentTab.Name.equalsIgnoreCase(instance.Name) : false));
             }
 
 
@@ -524,44 +535,45 @@ public class GuiGuideBase extends GuiScreen {
 
 
             if(RecipeUtils.GetTotalRecipeAmountFor(ObjectShowing) > 0){
-                buttonList.add(new GuideRecipeButton(buttonList.size() + 1, posX + 165, posY + 9, ShowingRecipe));
+                buttonList.add(new GuideRecipeButton(0, posX + 165, posY + 9, ShowingRecipe));
             }
 
             if(ShowingRecipe){
-                GuiButton bt = new GuiButton(buttonList.size() + 1, posX + 35, posY + 20 + (res.GetRenderYSize() / 4), 15, 20, "<");
+                GuiButton bt = new GuiButton(0, posX + 35, posY + 20 + (res.GetRenderYSize() / 4), 15, 20, "<");
                 bt.enabled = CurrentRecipe > 0;
                 buttonList.add(bt);
 
-                GuiButton bt2 = new GuiButton(buttonList.size() + 1, posX + 51 + res.GetRenderXSize(), posY + 20 + (res.GetRenderYSize() / 4), 15, 20, ">");
+                GuiButton bt2 = new GuiButton(0, posX + 51 + res.GetRenderXSize(), posY + 20 + (res.GetRenderYSize() / 4), 15, 20, ">");
                 bt2.enabled = CurrentRecipe < MaxRecipe;
                 buttonList.add(bt2);
 
 
 
 
-                GuiButton bt21 = new GuiButton(buttonList.size() + 1, posX + 35, posY + 30 + (res.GetRenderYSize() / 2), 15, 20, "<<");
+                GuiButton bt21 = new GuiButton(0, posX + 35, posY + 30 + (res.GetRenderYSize() / 2), 15, 20, "<<");
                 bt21.enabled = CurrentRecipeType > 0;
                 buttonList.add(bt21);
 
-                GuiButton bt22 = new GuiButton(buttonList.size() + 1, posX + 51 + res.GetRenderXSize(), posY + 30 + (res.GetRenderYSize() / 2), 15, 20, ">>");
+                GuiButton bt22 = new GuiButton(0, posX + 51 + res.GetRenderXSize(), posY + 30 + (res.GetRenderYSize() / 2), 15, 20, ">>");
                 bt22.enabled = CurrentRecipeType < MaxRecipeType;
                 buttonList.add(bt22);
 
-
-
-
-
-                for(GuideItem itm : res.AddItemsFor(posX + 50, posY + 30, new ArrayList<GuideItem>(), ObjectShowing, CurrentRecipe)){
-                    itm.id = buttonList.size() + 1;
+                for(GuideItem itm : res.AddItemsFor(posX + 50, posY + 30, new ArrayList<GuideItem>(), ObjectShowing, CurrentRecipe))
                     buttonList.add(itm);
 
-
-                }
 
             }
 
         }
 
+
+        int PrevId = 0;
+        for(Object r : buttonList){
+            if(r instanceof GuiButton){
+                GuiButton gb = (GuiButton)r;
+                gb.id = PrevId++;
+            }
+        }
 
     }
 
@@ -571,6 +583,9 @@ public class GuiGuideBase extends GuiScreen {
     }
 
     public void ResetObjectPageInfo(){
+        InfoScroll = 0;
+        InfoScrolling = false;
+
         ObjectShowing = null;
         ShowingObject = false;
         ShowingRecipe = false;

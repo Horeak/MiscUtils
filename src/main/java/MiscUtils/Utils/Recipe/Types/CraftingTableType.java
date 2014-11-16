@@ -57,7 +57,7 @@ public class CraftingTableType extends GuideRecipeTypeRender{
             if(r instanceof IRecipe){
                 IRecipe re = (IRecipe)r;
 
-                if(StackUtils.AreStacksEqual(re.getRecipeOutput(), stack)){
+                if(StackUtils.AreStacksEqualIgnoreDamage(re.getRecipeOutput(), stack)){
 
                     if(j == at) {
 
@@ -74,18 +74,22 @@ public class CraftingTableType extends GuideRecipeTypeRender{
                             }
 
 
-                            //TODO Fix ore dictionary recipes!
                         } else if (re instanceof ShapedOreRecipe) {
-                            for (int i = 0; i < StackUtils.GetMultiObject(((ShapedOreRecipe) re).getInput()).length; i++) {
-                                Object g = StackUtils.GetMultiObject(((ShapedOreRecipe) re).getInput())[i];
+                            ShapedOreRecipe res = (ShapedOreRecipe)re;
+
+                            for (int i = 0; i < res.getInput().length; i++) {
+                                Object g = res.getInput()[i];
                                 stacks[i] = StackUtils.GetObject(g);
                             }
 
                         } else if (re instanceof ShapelessOreRecipe) {
-                            for (int i = 0; i < StackUtils.GetMultiObject(((ShapelessOreRecipe) re).getInput()).length; i++) {
-                                Object g = StackUtils.GetMultiObject(((ShapelessOreRecipe) re).getInput())[i];
+                            ShapelessOreRecipe res = (ShapelessOreRecipe)re;
+
+                            for (int i = 0; i < res.getInput().size(); i++) {
+                                Object g = res.getInput().get(i);
                                 stacks[i] = StackUtils.GetObject(g);
                             }
+
                         }
 
                     }
@@ -122,7 +126,7 @@ public class CraftingTableType extends GuideRecipeTypeRender{
             if(r instanceof IRecipe) {
                 IRecipe res = (IRecipe) r;
 
-                if(StackUtils.AreStacksEqual(res.getRecipeOutput(), stack)){
+                if(StackUtils.AreStacksEqualIgnoreDamage(res.getRecipeOutput(), stack)){
                     i += 1;
                 }
 
@@ -151,9 +155,11 @@ public class CraftingTableType extends GuideRecipeTypeRender{
                if(r instanceof IRecipe){
                    IRecipe res = (IRecipe)r;
 
-                   if(StackUtils.AreStacksEqual(render, res.getRecipeOutput())){
+                   if(StackUtils.AreStacksEqualIgnoreDamage(render, res.getRecipeOutput())){
+
                       if(h == At){
                          render.stackSize = res.getRecipeOutput().stackSize;
+                         render.setItemDamage(res.getRecipeOutput().getItemDamage());
 
                       }
 

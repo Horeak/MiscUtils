@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -15,6 +16,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -205,45 +207,47 @@ public class RenderHelper {
     }
 
 
-    public static void RenderInventoryItem(IItemRenderer.ItemRenderType type, ItemStack item) {
-
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-
-        IIcon icon1 = item.getItem().getIconFromDamage(0);
-
-        double minU1 = (double)icon1.getMinU();
-        double minV1 = (double)icon1.getMinV();
-        double maxU1 = (double)icon1.getMaxU();
-        double maxV1 = (double)icon1.getMaxV();
-
-        tessellator.addVertexWithUV(16.0, 16.0, 0.0, maxU1, maxV1);
-        tessellator.addVertexWithUV(16.0, 0.0, 0.0, maxU1, minV1);
-        tessellator.addVertexWithUV( 0.0, 0.0, 0.0, minU1, minV1);
-        tessellator.addVertexWithUV( 0.0, 16.0, 0.0, minU1, maxV1);
-        tessellator.draw();
-    }
     public static void drawItemStack(FontRenderer fontRendererObj, ItemStack stack, int x, int y)
     {
+        Minecraft mc = Minecraft.getMinecraft();
 
-        net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
-        net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
+        if(!(stack.getItem() instanceof ItemBlock)){
+            GL11.glPushMatrix();
 
+            itemRender.renderItemIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y, false);
+            GL11.glEnable(GL11.GL_BLEND);
 
-        GL11.glColor4f(1F, 1F, 1F, 1F);
-        GL11.glTranslatef(0.0F, 0.0F, 32.0F);
-        itemRender.zLevel = 200.0F;
-        FontRenderer font = null;
-        if (stack != null) font = stack.getItem().getFontRenderer(stack);
-        if (font == null) font = fontRendererObj;
+            GL11.glColor4f(1F, 1F, 1F, 1F);
+            net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 
-        itemRender.renderItemAndEffectIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), stack, x, y);
-        itemRender.renderItemOverlayIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), stack, x, y, null);
-        itemRender.zLevel = 0.0F;
+            GL11.glPopMatrix();
 
-        GL11.glColor4f(1F, 1F, 1F, 1F);
+        }else if(stack.getItem() instanceof ItemBlock){
 
-        net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+            //Code based drawItemStack and drawScreen in GuiContainer.java
+            GL11.glPushMatrix();
+            GL11.glColor4f(1F, 1F, 1F, 1F);
+
+            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+            net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+            GL11.glDisable(GL11.GL_LIGHTING);
+
+            net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F / 1.0F, 240F / 1.0F);
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+            itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y);
+            itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y, null);
+
+            GL11.glEnable(GL11.GL_LIGHTING);
+            net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+
+            GL11.glColor4f(1F, 1F, 1F, 1F);
+            GL11.glPopMatrix();
+        }
 
     }
 

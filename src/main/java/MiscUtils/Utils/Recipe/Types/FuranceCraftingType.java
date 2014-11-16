@@ -4,6 +4,7 @@ import MiscUtils.GuideBase.Gui.Utils.GuideItem;
 import MiscUtils.GuideBase.Utils.GuideRecipeTypeRender;
 import MiscUtils.Utils.StackUtils;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.ResourceLocation;
@@ -50,7 +51,7 @@ public class FuranceCraftingType extends GuideRecipeTypeRender {
 
         Map<ItemStack, ItemStack> recipes = (Map<ItemStack, ItemStack>) FurnaceRecipes.smelting().getSmeltingList();
         for (Map.Entry<ItemStack, ItemStack> recipe : recipes.entrySet()) {
-            if(StackUtils.AreStacksEqual(recipe.getValue(), stack)) {
+            if(StackUtils.AreStacksEqualIgnoreDamage(recipe.getValue(), stack)) {
                 if(j == At) {
                     stacks[0] = recipe.getKey();
                 }
@@ -76,7 +77,7 @@ public class FuranceCraftingType extends GuideRecipeTypeRender {
 
         Map<ItemStack, ItemStack> recipes = (Map<ItemStack, ItemStack>) FurnaceRecipes.smelting().getSmeltingList();
         for (Map.Entry<ItemStack, ItemStack> recipe : recipes.entrySet()) {
-            if(StackUtils.AreStacksEqual(recipe.getValue(), stack)) {
+            if(StackUtils.AreStacksEqualIgnoreDamage(recipe.getValue(), stack)) {
                num += 1;
             }
         }
@@ -96,11 +97,13 @@ public class FuranceCraftingType extends GuideRecipeTypeRender {
         for(Object r : FurnaceRecipes.smelting().getSmeltingList().values()) {
             ItemStack sta = StackUtils.GetObject(r);
 
-            if (StackUtils.AreStacksEqual(render, sta)) {
+            if (StackUtils.AreStacksEqualIgnoreDamage(render, sta)) {
 
-
-                if (h == At)
+                if (h == At) {
                     render.stackSize = sta.stackSize;
+                    render.setItemDamage(sta.getItemDamage());
+                }
+
 
                 h += 1;
             }
@@ -109,6 +112,8 @@ public class FuranceCraftingType extends GuideRecipeTypeRender {
 
 
         ListToAddTo.add(new GuideItem(0, PosX + 65, PosY + 23, render));
+
+        ListToAddTo.add(new GuideItem(0, PosX + 5, PosY + 41, new ItemStack(Items.coal)));
 
 
         return ListToAddTo;
