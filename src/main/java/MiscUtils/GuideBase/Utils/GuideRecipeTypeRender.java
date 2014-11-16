@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 public abstract class GuideRecipeTypeRender {
 
+    public abstract String GetName();
+
     public abstract int GetRenderXSize();
     public abstract int GetRenderYSize();
 
@@ -17,13 +19,14 @@ public abstract class GuideRecipeTypeRender {
 
     public abstract ResourceLocation GetRenderTexture();
 
-    public abstract ItemStack[] GetRequiredItemsFor(ItemStack stack);
+    public abstract ItemStack[] GetRequiredItemsFor(ItemStack stack, int At);
     public abstract boolean ContainsRecipeFor(ItemStack stack);
 
     public abstract int GetRecipesAmountFor(ItemStack stack);
 
     public void RenderExtras(GuiScreen gui, int posX, int posY){}
 
-    public abstract ArrayList<GuideItem> AddItemsFor(int PosX, int PosY, ArrayList<GuideItem> ListToAddTo, ItemStack stack);
+    //TODO Somehow make a default way of getting the stack size of the recipe output
+    public abstract ArrayList<GuideItem> AddItemsFor(int PosX, int PosY, ArrayList<GuideItem> ListToAddTo, ItemStack stack, int At);
 
 }

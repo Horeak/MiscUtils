@@ -10,3 +10,5 @@ guide.hover.recipeShow=Click to show
 guide.hover.recipeHide=Click to hide
 guide.hover.nextRecipe=Next Recipe
 guide.hover.prevRecipe=Previous Recipe
+guide.hover.nextRecipeType=Next Recipe Type
+guide.hover.prevRecipeType=Previous Recipe Type

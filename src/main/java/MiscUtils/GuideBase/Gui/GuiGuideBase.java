@@ -13,10 +13,10 @@ import MiscUtils.GuideBase.Utils.ModGuideInstance;
 import MiscUtils.GuideBase.Utils.TextGuideTab;
 import MiscUtils.MiscUtilsMain;
 import MiscUtils.Utils.Recipe.RecipeUtils;
+import MiscUtils.Utils.StackUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
@@ -51,6 +51,7 @@ public class GuiGuideBase extends GuiScreen {
     //TODO Add recipe. Toggle when clicking the recipe icon. Add custom recipe handeling for RecipeUtils.java
     public boolean ShowingRecipe = false;
     public int CurrentRecipe, MaxRecipe;
+    public int CurrentRecipeType, MaxRecipeType;
     public GuideRecipeTypeRender res;
 
     int xSizeOfTexture = 255, ySizeOfTexture = 208;
@@ -115,10 +116,6 @@ public class GuiGuideBase extends GuiScreen {
 
         initGui();
 
-        GL11.glPushMatrix();
-        GL11.glColor4f(1F, 1F, 1F, 1F);
-        super.drawScreen(x, y, f);
-        GL11.glPopMatrix();
 
 
         //Get scroll bar value
@@ -135,7 +132,6 @@ public class GuiGuideBase extends GuiScreen {
             }
 
         }
-
 
         //Render scroll bar
         if(!CanScrollText){
@@ -154,16 +150,13 @@ public class GuiGuideBase extends GuiScreen {
             GL11.glPopMatrix();
         }
 
+
+
         int textX = 34, textY = 16;
-
-
-
-        GL11.glPushMatrix();
 
         //Render text pages
         if(!ShowingObject) {
             fontRendererObj.drawString(EnumChatFormatting.UNDERLINE + StatCollector.translateToLocal(Current.Id) + ": " + StatCollector.translateToLocal(currentTab.Name), posX + textX, posY + 4, new Color(91, 91, 91).getRGB(), false);
-
 
             if (currentTab instanceof TextGuideTab) {
                 String Text = ((TextGuideTab) currentTab).GetText();
@@ -202,7 +195,10 @@ public class GuiGuideBase extends GuiScreen {
             }
 
 
-        }else if (ShowingObject && ObjectShowing != null){
+        }
+
+
+        if (ShowingObject && ObjectShowing != null){
             fontRendererObj.drawString(ObjectShowing.getDisplayName(), posX + textX, posY + 4, new Color(91, 91, 91).getRGB(), false);
             String Text = currentTab.GetInfoForStack(ObjectShowing);
 
@@ -216,47 +212,55 @@ public class GuiGuideBase extends GuiScreen {
             drawRect(xx - 2, yy - 2, xx + 18, yy + 18, c2.getRGB());
             drawRect(xx, yy, xx + 16, yy + 16, c1.getRGB());
 
-
             //Render item when showing a item page
-            GL11.glPushMatrix();
-            GL11.glColor4f(1F, 1F, 1F, 1F);
+            MiscUtils.Render.RenderHelper.drawItemStack(fontRendererObj, ObjectShowing, xx, yy);
 
-            RenderHelper.disableStandardItemLighting();
-            itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), ObjectShowing, xx, yy);
-            itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), ObjectShowing, xx, yy);
-            RenderHelper.enableStandardItemLighting();
 
-            GL11.glPopMatrix();
+            int Offset = 0;
+
+
+            if(ShowingRecipe){
+                MaxRecipeType = RecipeUtils.GetTotalDifferentRecipeTypes(ObjectShowing) - 1;
+
+                if(RecipeUtils.GetRecipeAt(ObjectShowing, CurrentRecipeType) != null)
+                    res = RecipeUtils.GetRecipeAt(ObjectShowing, CurrentRecipeType);
+
+                if(res != null) {
+
+                    MaxRecipe = res.GetRecipesAmountFor(ObjectShowing) - 1;
+
+                    if (CurrentRecipe > MaxRecipe)
+                        CurrentRecipe = MaxRecipe;
+
+
+
+                    Minecraft.getMinecraft().renderEngine.bindTexture(res.GetRenderTexture());
+                    drawTexturedModalRect(posX + 50, posY + 30, res.GetRenderPositionX(), res.GetRenderPositionY(), res.GetRenderXSize(), res.GetRenderYSize());
+                    res.RenderExtras(this, posX, posY);
+
+
+                    super.drawScreen(x, y, f);
+
+                    drawCenteredString(fontRendererObj, StatCollector.translateToFallback(res.GetName()), posX + 100, posY + 20, new Color(165, 165, 165).getRGB());
+
+                    textY += res.GetRenderYSize();
+                    Offset = res.GetRenderYSize();
+
+                }
+
+            }else{
+
+                super.drawScreen(x, y, f);
+
+            }
+
+
+
 
             if(Text != null && !Text.isEmpty()) {
                 int lines = 0;
                 java.util.List list = fontRendererObj.listFormattedStringToWidth(Text, TextLength);
                 lines = list.size();
-
-
-                int Offset = 0;
-
-                if(ShowingRecipe){
-                    MaxRecipe = (RecipeUtils.GetTotalRecipeAmountFor(ObjectShowing) - 1);
-
-                    if(CurrentRecipe > MaxRecipe)
-                        CurrentRecipe = MaxRecipe;
-
-                    if(RecipeUtils.GetRecipeAt(ObjectShowing, CurrentRecipe) != null)
-                    res = RecipeUtils.GetRecipeAt(ObjectShowing, CurrentRecipe);
-
-                    Minecraft.getMinecraft().renderEngine.bindTexture(res.GetRenderTexture());
-
-                    drawTexturedModalRect(posX + 50, posY + 30, res.GetRenderPositionX(), res.GetRenderPositionY(), res.GetRenderXSize(), res.GetRenderYSize());
-                    res.RenderExtras(this, posX, posY);
-
-                    textY += res.GetRenderYSize();
-                    Offset = res.GetRenderYSize();
-
-
-                }
-
-
 
                 int PerPage = 16 - (Offset / 10);
                 double trans = (lines) / (ScrollMax);
@@ -287,11 +291,11 @@ public class GuiGuideBase extends GuiScreen {
 
 
             }
+        }else{
+
+            GL11.glColor4f(1F, 1F, 1F, 1F);
+            super.drawScreen(x, y, f);
         }
-
-        GL11.glPopMatrix();
-
-
 
 
 
@@ -350,7 +354,22 @@ public class GuiGuideBase extends GuiScreen {
 
                         java.util.List temp = Arrays.asList(desc);
                         drawHoveringText(temp, x, y, fontRendererObj);
+
+                    }else if(btn.displayString == "<<"){
+                        String[] desc = {StatCollector.translateToLocal("guide.hover.prevRecipeType")};
+
+                        java.util.List temp = Arrays.asList(desc);
+                        drawHoveringText(temp, x, y, fontRendererObj);
+
+
+                    }else if(btn.displayString == ">>"){
+                        String[] desc = {StatCollector.translateToLocal("guide.hover.nextRecipeType")};
+
+                        java.util.List temp = Arrays.asList(desc);
+                        drawHoveringText(temp, x, y, fontRendererObj);
                     }
+
+
 
 
                 }
@@ -372,32 +391,21 @@ public class GuiGuideBase extends GuiScreen {
             Current = ((GuideModSelectionButton) button).GetInstance().GetModInstance();
             currentTab = null;
 
-            ObjectShowing = null;
-            ShowingObject = false;
-            ShowingRecipe = false;
-
-            CurrentRecipe = 0;
-            MaxRecipe = 0;
+            ResetObjectPageInfo();
         }
 
         if(button instanceof GuideTabSelectionButton) {
             currentTab = ((GuideTabSelectionButton) button).GetInstance();
 
-            ObjectShowing = null;
-            ShowingObject = false;
-            ShowingRecipe = false;
+            ResetObjectPageInfo();
 
-            CurrentRecipe = 0;
-            MaxRecipe = 0;
         }
 
         if(button instanceof GuideObjectButton) {
+            ResetObjectPageInfo();
+
             ObjectShowing = ((GuideObjectButton) button).stack;
             ShowingObject = true;
-            ShowingRecipe = false;
-
-            CurrentRecipe = 0;
-            MaxRecipe = 0;
         }
 
         if(button instanceof GuideRecipeButton){
@@ -408,6 +416,9 @@ public class GuiGuideBase extends GuiScreen {
 
             CurrentRecipe = 0;
             MaxRecipe = 0;
+
+            CurrentRecipeType = 0;
+            MaxRecipeType = 0;
         }
 
         if(button.displayString == "<"){
@@ -415,6 +426,38 @@ public class GuiGuideBase extends GuiScreen {
 
         }else if(button.displayString == ">"){
             CurrentRecipe += 1;
+
+
+        }else  if(button.displayString == "<<"){
+            CurrentRecipeType -= 1;
+
+        }else if(button.displayString == ">>"){
+            CurrentRecipeType += 1;
+        }
+
+        if(button instanceof GuideItem){
+            GuideItem gd = (GuideItem)button;
+
+            //Remove for loops to allow items that are not registered to be able to be viewed.
+            //TODO Allow accessing pages that are not registered? have them show the recipe and a blank page? only allow items that have a recipe?
+
+            if(!StackUtils.AreStacksEqual(ObjectShowing, gd.stack)){
+                for(ModGuideInstance inst : GuideModRegistry.ModArray){
+                    for(GuideTab tab : inst.guide.GuideTabs){
+                        for(Object r : tab.list){
+                            ItemStack stack = StackUtils.GetObject(r);
+
+                            if(StackUtils.AreStacksEqual(stack, gd.stack)){
+                                ResetObjectPageInfo();
+
+                                ObjectShowing = gd.stack;
+                                ShowingObject = true;
+                            }
+
+                        }
+                    }
+                }
+            }
         }
 
 
@@ -485,19 +528,30 @@ public class GuiGuideBase extends GuiScreen {
             }
 
             if(ShowingRecipe){
-                GuiButton bt = new GuiButton(buttonList.size() + 1, posX + 35, posY + 50, 15, 20, "<");
+                GuiButton bt = new GuiButton(buttonList.size() + 1, posX + 35, posY + 20 + (res.GetRenderYSize() / 4), 15, 20, "<");
                 bt.enabled = CurrentRecipe > 0;
-
                 buttonList.add(bt);
 
-
-                GuiButton bt2 = new GuiButton(buttonList.size() + 1, posX + 51 + res.GetRenderXSize(), posY + 50, 15, 20, ">");
+                GuiButton bt2 = new GuiButton(buttonList.size() + 1, posX + 51 + res.GetRenderXSize(), posY + 20 + (res.GetRenderYSize() / 4), 15, 20, ">");
                 bt2.enabled = CurrentRecipe < MaxRecipe;
-
                 buttonList.add(bt2);
 
 
-                for(GuideItem itm : res.AddItemsFor(posX + 50, posY + 30, new ArrayList<GuideItem>(), ObjectShowing)){
+
+
+                GuiButton bt21 = new GuiButton(buttonList.size() + 1, posX + 35, posY + 30 + (res.GetRenderYSize() / 2), 15, 20, "<<");
+                bt21.enabled = CurrentRecipeType > 0;
+                buttonList.add(bt21);
+
+                GuiButton bt22 = new GuiButton(buttonList.size() + 1, posX + 51 + res.GetRenderXSize(), posY + 30 + (res.GetRenderYSize() / 2), 15, 20, ">>");
+                bt22.enabled = CurrentRecipeType < MaxRecipeType;
+                buttonList.add(bt22);
+
+
+
+
+
+                for(GuideItem itm : res.AddItemsFor(posX + 50, posY + 30, new ArrayList<GuideItem>(), ObjectShowing, CurrentRecipe)){
                     itm.id = buttonList.size() + 1;
                     buttonList.add(itm);
 
@@ -516,6 +570,14 @@ public class GuiGuideBase extends GuiScreen {
         return false;
     }
 
+    public void ResetObjectPageInfo(){
+        ObjectShowing = null;
+        ShowingObject = false;
+        ShowingRecipe = false;
 
+        CurrentRecipe = 0;
+        MaxRecipe = 0;
+
+    }
 
 }

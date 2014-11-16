@@ -18,6 +18,11 @@ public class CraftingTableType extends GuideRecipeTypeRender{
 
 
     @Override
+    public String GetName() {
+        return "container.crafting";
+    }
+
+    @Override
     public int GetRenderXSize() {
         return 124;
     }
@@ -43,40 +48,49 @@ public class CraftingTableType extends GuideRecipeTypeRender{
     }
 
     @Override
-    public ItemStack[] GetRequiredItemsFor(ItemStack stack) {
+    public ItemStack[] GetRequiredItemsFor(ItemStack stack, int at) {
         ItemStack[] stacks = new ItemStack[9];
+
+        int j = 0;
 
         for(Object r : CraftingManager.getInstance().getRecipeList()){
             if(r instanceof IRecipe){
                 IRecipe re = (IRecipe)r;
 
                 if(StackUtils.AreStacksEqual(re.getRecipeOutput(), stack)){
-                    if(re instanceof ShapelessRecipes){
-                        for(int i = 0; i < ((ShapelessRecipes)re).recipeItems.size(); i++){
-                            Object g = ((ShapelessRecipes)re).recipeItems.get(i);
-                            stacks[i] = StackUtils.GetObject(g);
+
+                    if(j == at) {
+
+                        if (re instanceof ShapelessRecipes) {
+                            for (int i = 0; i < ((ShapelessRecipes) re).recipeItems.size(); i++) {
+                                Object g = ((ShapelessRecipes) re).recipeItems.get(i);
+                                stacks[i] = StackUtils.GetObject(g);
+                            }
+
+                        } else if (re instanceof ShapedRecipes) {
+                            for (int i = 0; i < ((ShapedRecipes) re).recipeItems.length; i++) {
+                                Object g = ((ShapedRecipes) re).recipeItems[i];
+                                stacks[i] = StackUtils.GetObject(g);
+                            }
+
+
+                            //TODO Fix ore dictionary recipes!
+                        } else if (re instanceof ShapedOreRecipe) {
+                            for (int i = 0; i < StackUtils.GetMultiObject(((ShapedOreRecipe) re).getInput()).length; i++) {
+                                Object g = StackUtils.GetMultiObject(((ShapedOreRecipe) re).getInput())[i];
+                                stacks[i] = StackUtils.GetObject(g);
+                            }
+
+                        } else if (re instanceof ShapelessOreRecipe) {
+                            for (int i = 0; i < StackUtils.GetMultiObject(((ShapelessOreRecipe) re).getInput()).length; i++) {
+                                Object g = StackUtils.GetMultiObject(((ShapelessOreRecipe) re).getInput())[i];
+                                stacks[i] = StackUtils.GetObject(g);
+                            }
                         }
 
-                    }else if(re instanceof ShapedRecipes){
-                        for(int i = 0; i < ((ShapedRecipes)re).recipeItems.length; i++){
-                            Object g = ((ShapedRecipes)re).recipeItems[i];
-                            stacks[i] = StackUtils.GetObject(g);
-                        }
-
-                        //TODO Fix ore dictionary recipes!
-                    }else if(re instanceof ShapedOreRecipe){
-                        for(int i = 0; i < StackUtils.GetMultiObject(((ShapedOreRecipe)re).getInput()).length; i++){
-                            Object g = StackUtils.GetMultiObject(((ShapedOreRecipe)re).getInput())[i];
-                            stacks[i] = StackUtils.GetObject(g);
-                        }
-
-                    }else if(re instanceof ShapelessOreRecipe){
-                        for(int i = 0; i < StackUtils.GetMultiObject(((ShapelessOreRecipe)re).getInput()).length; i++){
-                            Object g = StackUtils.GetMultiObject(((ShapelessOreRecipe)re).getInput())[i];
-                            stacks[i] = StackUtils.GetObject(g);
-                        }
                     }
 
+                    j += 1;
 
                 }
             }
@@ -87,12 +101,11 @@ public class CraftingTableType extends GuideRecipeTypeRender{
         return stacks;
     }
 
-    //TODO Returning true some times even when no recipes
     @Override
     public boolean ContainsRecipeFor(ItemStack stack) {
         ArrayList<ItemStack> list = new ArrayList<ItemStack>();
 
-        for(ItemStack st : GetRequiredItemsFor(stack)){
+        for(ItemStack st : GetRequiredItemsFor(stack, 0)){
             if(st != null)
                 list.add(st);
 
@@ -113,7 +126,6 @@ public class CraftingTableType extends GuideRecipeTypeRender{
                     i += 1;
                 }
 
-
             }
         }
 
@@ -121,21 +133,37 @@ public class CraftingTableType extends GuideRecipeTypeRender{
         return i;
     }
 
-    //TODO Fix the actual recipes. (Look at silver ingot recipe) (it combines every available recipe into one....)
     @Override
-    public ArrayList<GuideItem> AddItemsFor(int PosX, int PosY, ArrayList<GuideItem> ListToAddTo, ItemStack stack) {
-       ItemStack[] stacks = GetRequiredItemsFor(stack);
-
+    public ArrayList<GuideItem> AddItemsFor(int PosX, int PosY, ArrayList<GuideItem> ListToAddTo, ItemStack stack, int At) {
+       ItemStack[] stacks = GetRequiredItemsFor(stack, At);
+        ItemStack render = stack.copy();
 
         for(int y = 0; y < 3; y++){
             for(int x = 0; x < 3; x++){
                 ListToAddTo.add(new GuideItem(0, PosX + 5 + (x * 18), PosY + 5 + (y * 18), stacks[x+y * 3]));
             }
-
         }
 
 
-        ListToAddTo.add(new GuideItem(0, PosX + 99, PosY + 23, stack));
+        int h = 0;
+        //Get the stack size of the output...
+         for(Object r : CraftingManager.getInstance().getRecipeList()) {
+               if(r instanceof IRecipe){
+                   IRecipe res = (IRecipe)r;
+
+                   if(StackUtils.AreStacksEqual(render, res.getRecipeOutput())){
+                      if(h == At){
+                         render.stackSize = res.getRecipeOutput().stackSize;
+
+                      }
+
+                       h += 1;
+                   }
+               }
+         }
+
+
+        ListToAddTo.add(new GuideItem(0, PosX + 99, PosY + 23, render));
 
 
         return ListToAddTo;

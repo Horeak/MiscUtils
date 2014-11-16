@@ -13,6 +13,11 @@ import java.util.Map;
 
 public class FuranceCraftingType extends GuideRecipeTypeRender {
     @Override
+    public String GetName() {
+        return "container.furnace";
+    }
+
+    @Override
     public int GetRenderXSize() {
         return 90;
     }
@@ -38,13 +43,19 @@ public class FuranceCraftingType extends GuideRecipeTypeRender {
     }
 
     @Override
-    public ItemStack[] GetRequiredItemsFor(ItemStack stack) {
+    public ItemStack[] GetRequiredItemsFor(ItemStack stack, int At) {
         ItemStack[] stacks = new ItemStack[1];
+
+        int j = 0;
 
         Map<ItemStack, ItemStack> recipes = (Map<ItemStack, ItemStack>) FurnaceRecipes.smelting().getSmeltingList();
         for (Map.Entry<ItemStack, ItemStack> recipe : recipes.entrySet()) {
             if(StackUtils.AreStacksEqual(recipe.getValue(), stack)) {
-                stacks[0] = recipe.getKey();
+                if(j == At) {
+                    stacks[0] = recipe.getKey();
+                }
+
+                j += 1;
             }
         }
 
@@ -74,10 +85,30 @@ public class FuranceCraftingType extends GuideRecipeTypeRender {
     }
 
     @Override
-    public ArrayList<GuideItem> AddItemsFor(int PosX, int PosY, ArrayList<GuideItem> ListToAddTo, ItemStack stack) {
+    public ArrayList<GuideItem> AddItemsFor(int PosX, int PosY, ArrayList<GuideItem> ListToAddTo, ItemStack stack, int At) {
+        ItemStack render = stack.copy();
 
-        ListToAddTo.add(new GuideItem(0, PosX + 5, PosY + 5, GetRequiredItemsFor(stack)[0]));
-        ListToAddTo.add(new GuideItem(0, PosX + 65, PosY + 23, stack));
+
+        ListToAddTo.add(new GuideItem(0, PosX + 5, PosY + 5, GetRequiredItemsFor(stack, At)[0]));
+
+        int h = 0;
+        //Get the stack size of the output...
+        for(Object r : FurnaceRecipes.smelting().getSmeltingList().values()) {
+            ItemStack sta = StackUtils.GetObject(r);
+
+            if (StackUtils.AreStacksEqual(render, sta)) {
+
+
+                if (h == At)
+                    render.stackSize = sta.stackSize;
+
+                h += 1;
+            }
+        }
+
+
+
+        ListToAddTo.add(new GuideItem(0, PosX + 65, PosY + 23, render));
 
 
         return ListToAddTo;

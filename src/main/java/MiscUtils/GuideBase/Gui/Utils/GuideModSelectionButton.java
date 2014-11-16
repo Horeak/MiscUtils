@@ -2,9 +2,9 @@ package MiscUtils.GuideBase.Gui.Utils;
 
 import MiscUtils.GuideBase.Utils.GuideInstance;
 import MiscUtils.MiscUtilsMain;
+import MiscUtils.Render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -59,18 +59,10 @@ public class GuideModSelectionButton extends GuiButton {
             drawTexturedModalRect(xx, yy, 0,29 ,30, 28);
         }
 
+        if(instance.ModPageDisplay() != null)
+            RenderHelper.drawItemStack(mc.fontRenderer, instance.ModPageDisplay(), xx + 7, yy + 5);
 
-        if(instance.ModPageDisplay() != null) {
 
-            if(mode == 0)
-                RenderHelper.enableStandardItemLighting();
-
-            itemRender.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.getTextureManager(), instance.ModPageDisplay(), xx + 7, yy + 5);
-            itemRender.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), instance.ModPageDisplay(), xx + 7, yy + 5);
-
-            RenderHelper.disableStandardItemLighting();
-
-        }
         GL11.glPopMatrix();
     }
 

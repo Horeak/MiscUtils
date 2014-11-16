@@ -65,6 +65,19 @@ public class RecipeUtils {
         return num;
     }
 
+    public static int GetTotalDifferentRecipeTypes(ItemStack stack){
+        int num = 0;
+
+        for(GuideRecipeTypeRender res : RecipeTypeRenders){
+            if(res.ContainsRecipeFor(stack))
+                num += 1;
+        }
+
+
+        return num;
+
+    }
+
 
 
     @Deprecated

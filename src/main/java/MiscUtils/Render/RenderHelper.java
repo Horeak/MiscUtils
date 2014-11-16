@@ -2,9 +2,11 @@ package MiscUtils.Render;
 
 import MiscUtils.Utils.RayTracing;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -18,6 +20,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class RenderHelper {
+
+    protected static RenderItem itemRender = new RenderItem();
+
 
     public static void RenderInfoTagOverTileEntity(TileEntity tile, ArrayList<String> InfoStrings, double x, double y, double z){
         MovingObjectPosition mop = RayTracing.instance().getTarget();
@@ -218,6 +223,28 @@ public class RenderHelper {
         tessellator.addVertexWithUV( 0.0, 16.0, 0.0, minU1, maxV1);
         tessellator.draw();
     }
+    public static void drawItemStack(FontRenderer fontRendererObj, ItemStack stack, int x, int y)
+    {
 
+        net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
+        net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
+
+
+        GL11.glColor4f(1F, 1F, 1F, 1F);
+        GL11.glTranslatef(0.0F, 0.0F, 32.0F);
+        itemRender.zLevel = 200.0F;
+        FontRenderer font = null;
+        if (stack != null) font = stack.getItem().getFontRenderer(stack);
+        if (font == null) font = fontRendererObj;
+
+        itemRender.renderItemAndEffectIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), stack, x, y);
+        itemRender.renderItemOverlayIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), stack, x, y, null);
+        itemRender.zLevel = 0.0F;
+
+        GL11.glColor4f(1F, 1F, 1F, 1F);
+
+        net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+
+    }
 
 }

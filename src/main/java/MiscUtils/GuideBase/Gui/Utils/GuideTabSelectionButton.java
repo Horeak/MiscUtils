@@ -4,7 +4,6 @@ import MiscUtils.GuideBase.Utils.GuideTab;
 import MiscUtils.MiscUtilsMain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -64,17 +63,9 @@ public class GuideTabSelectionButton extends GuiButton {
             }
 
 
-            if(instance.stack != null) {
+        if(instance.stack != null)
+                MiscUtils.Render.RenderHelper.drawItemStack(mc.fontRenderer, instance.stack, xx + 7, yy + 5);
 
-                if(mode == 0)
-                    RenderHelper.enableStandardItemLighting();
-
-                itemRender.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.getTextureManager(), instance.stack, xx + 7, yy + 5);
-                itemRender.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), instance.stack, xx + 7, yy + 5);
-
-                RenderHelper.disableStandardItemLighting();
-
-        }
         GL11.glPopMatrix();
     }
 }

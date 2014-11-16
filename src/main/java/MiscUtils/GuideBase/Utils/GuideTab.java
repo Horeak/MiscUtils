@@ -31,6 +31,11 @@ public class GuideTab {
         list.add(stack);
 
     }
+
+    //TODO Maybe change to language specific version? (blockinfo_en_US.txt)? Get language code then access file.
+    //TODO Create file if missing?
+    //TODO Add empty properties key if missing?
+
     public String GetInfoForStack(Object r){
         ItemStack stack = StackUtils.GetObject(r);
 
@@ -45,7 +50,7 @@ public class GuideTab {
                         prop.load(inputstream);
 
 
-                        return prop.getProperty("block.info." + stack.getDisplayName().toLowerCase().replace(" ", "_"), "block.info." + stack.getDisplayName().toLowerCase().replace(" ", "_"));
+                        return prop.getProperty("block.info." + stack.getDisplayName().toLowerCase().replace(" ", "_"), "No info found for block! Check blockinfo file! file path: " + "\n" + "/assets/" + instance.BlockDescriptions().getResourceDomain() + "/" + instance.BlockDescriptions().getResourcePath());
 
                     }
 
@@ -67,7 +72,7 @@ public class GuideTab {
                         prop.load(inputstream);
 
 
-                        return prop.getProperty("item.info." + stack.getDisplayName().toLowerCase().replace(" ", "_"), "item.info." + stack.getDisplayName().toLowerCase().replace(" ", "_"));
+                        return prop.getProperty("item.info." + stack.getDisplayName().toLowerCase().replace(" ", "_"), "No info found for item! Check iteminfo file! file path: " + "\n" + "/assets/" + instance.ItemDescriptions().getResourceDomain() + "/" + instance.ItemDescriptions().getResourcePath());
 
                     }
 
