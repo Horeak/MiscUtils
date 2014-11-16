@@ -17,6 +17,7 @@ import MiscUtils.Utils.StackUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
@@ -53,6 +54,10 @@ public class GuiGuideBase extends GuiScreen {
     public int CurrentRecipeType, MaxRecipeType;
     public GuideRecipeTypeRender res;
 
+    public boolean SearchBar = false;
+
+    public GuiTextField ObjectSearch;
+
     int xSizeOfTexture = 255, ySizeOfTexture = 208;
     double ScrollMax = 4.825;
     float ScrollOffset = 5.175F;
@@ -64,6 +69,10 @@ public class GuiGuideBase extends GuiScreen {
     protected void mouseClicked(int x, int y, int g)
     {
         super.mouseClicked(x, y, g);
+
+        if(ObjectSearch != null && SearchBar)
+            ObjectSearch.mouseClicked(x, y, g);
+
         int posX = (this.width - xSizeOfTexture) / 2;
         int posY = (this.height - ySizeOfTexture) / 2;
 
@@ -383,6 +392,16 @@ public class GuiGuideBase extends GuiScreen {
 
     }
 
+    public void keyTyped(char key, int keycode){
+        super.keyTyped(key, keycode);
+
+        if(ObjectSearch != null && ObjectSearch.isFocused()){
+            ObjectSearch.textboxKeyTyped(key, keycode);
+        }
+
+
+
+      }
 
     @Override
     protected void actionPerformed(GuiButton button){
@@ -483,6 +502,21 @@ public class GuiGuideBase extends GuiScreen {
         int posX = (this.width - xSizeOfTexture) / 2;
         int posY = (this.height - ySizeOfTexture) / 2;
 
+        SearchBar = false;
+
+        int obSX = posX + 60, obSY = posY - 12;
+        int sizeX = 130, sizeY = 12;
+
+        if(ObjectSearch == null)
+        ObjectSearch = new GuiTextField(fontRendererObj, obSX, obSY, sizeX, sizeY);
+        else{
+            ObjectSearch.xPosition = obSX;
+            ObjectSearch.yPosition = obSY;
+
+            ObjectSearch.height = sizeY;
+            ObjectSearch.width = sizeX;
+        }
+
         for(int i = 0; i < GuideModRegistry.ModArray.size(); i++){
             GuideInstance instance = GuideModRegistry.ModArray.get(i).guide;
             buttonList.add(new GuideModSelectionButton(0, posX  - 2, (posY + 3) + (i * 27), instance, Current != null ? Current.guide.ModPageName().equalsIgnoreCase(instance.ModPageName()) : false));
@@ -499,18 +533,46 @@ public class GuiGuideBase extends GuiScreen {
 
 
 
+        if(!ShowingObject && !(currentTab instanceof TextGuideTab))
+        if(ObjectSearch != null) {
+            ObjectSearch.drawTextBox();
+            SearchBar = true;
+        }
+
+
+        ArrayList copy = new ArrayList();
+
+        if(currentTab != null && currentTab.list != null && currentTab.list.size() > 0)
+        for(Object r : currentTab.list)
+                copy.add(r);
 
         //Add ObjectButtons based on scroll
-        if(!ShowingObject) {
-            if (currentTab != null && currentTab.list != null && currentTab.list.size() > 0 && !(currentTab instanceof TextGuideTab)) {
+          if (!ShowingObject && currentTab != null && !(currentTab instanceof TextGuideTab)) {
+
+                if(ObjectSearch != null && !ObjectSearch.getText().isEmpty()) {
+
+                    //TODO Fix removal of items when they do not contain search words
+                    for (int i = 0; i < copy.size(); i++) {
+                            ItemStack stack = StackUtils.GetObject(copy.get(i));
+
+                            if (!stack.getDisplayName().contains(ObjectSearch.getText())) {
+                                copy.remove(stack);
+                            }
+                        }
+
+                }
+
                 int PerPage = 19;
-                int m = currentTab.list.size();
+                int m = copy.size();
+
+
 
 
                 if (m > PerPage)
                     CanScrollText = true;
                 else
                     CanScrollText = false;
+
 
                 double transs = (m * (InfoScroll / ScrollMax));
                 int trant = (int) transs;
@@ -525,12 +587,10 @@ public class GuiGuideBase extends GuiScreen {
 
                 if (lineMax > 0 && lineMin >= 0)
                     for (int line = lineMin; line < lineMax; line++) {
-                        ItemStack stack = (ItemStack) currentTab.list.get(line);
+                        ItemStack stack = (ItemStack) copy.get(line);
                         buttonList.add(new GuideObjectButton(buttonList.size() + 1, posX + 36, posY + 16 + ((line - lineMin) * 10), stack));
                     }
 
-
-            }
         }else{
 
 
@@ -592,6 +652,10 @@ public class GuiGuideBase extends GuiScreen {
 
         CurrentRecipe = 0;
         MaxRecipe = 0;
+
+        SearchBar = false;
+
+        ObjectSearch.setText("");
 
     }
 
