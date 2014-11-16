@@ -242,12 +242,12 @@ public class GuiGuideBase extends GuiScreen {
 
                     Minecraft.getMinecraft().renderEngine.bindTexture(res.GetRenderTexture());
                     drawTexturedModalRect(posX + 50, posY + 30, res.GetRenderPositionX(), res.GetRenderPositionY(), res.GetRenderXSize(), res.GetRenderYSize());
-                    res.RenderExtras(this, posX, posY);
+                    res.RenderExtras(this, posX, posY, ObjectShowing, CurrentRecipe);
 
 
                     super.drawScreen(x, y, f);
 
-                    String nm = EnumChatFormatting.UNDERLINE + StatCollector.translateToFallback(res.GetName());
+                    String nm = (EnumChatFormatting.UNDERLINE) + StatCollector.translateToLocal(res.GetName());
 
                     fontRendererObj.drawString(nm, posX + 100 - fontRendererObj.getStringWidth(nm) / 2, posY + 20, new Color(108, 108, 108).getRGB(), false);
 
@@ -343,9 +343,11 @@ public class GuiGuideBase extends GuiScreen {
                 } else if(btn instanceof GuideItem){
                     GuideItem el = (GuideItem)btn;
                         if (el != null && el.stack != null) {
-                            String[] desc = {el.stack.getDisplayName()};
+                            java.util.List temp = new ArrayList();
 
-                            java.util.List temp = Arrays.asList(desc);
+                            temp.add(el.stack.getDisplayName());
+                            el.stack.getItem().addInformation(el.stack, Minecraft.getMinecraft().thePlayer, temp, false);
+
                             drawHoveringText(temp, x, y, fontRendererObj);
                         }
 
@@ -461,13 +463,13 @@ public class GuiGuideBase extends GuiScreen {
             //Remove for loops to allow items that are not registered to be able to be viewed.
             //TODO Allow accessing pages that are not registered? have them show the recipe and a blank page? only allow items that have a recipe?
 
-            if(!StackUtils.AreStacksEqualIgnoreDamage(ObjectShowing, gd.stack)){
+            if(!StackUtils.AreStacksEqualIgnoreData(ObjectShowing, gd.stack)){
                 for(ModGuideInstance inst : GuideModRegistry.ModArray){
                     for(GuideTab tab : inst.guide.GuideTabs){
                         for(Object r : tab.list){
                             ItemStack stack = StackUtils.GetObject(r);
 
-                            if(StackUtils.AreStacksEqualIgnoreDamage(stack, gd.stack)){
+                            if(StackUtils.AreStacksEqualIgnoreData(stack, gd.stack)){
                                 ResetObjectPageInfo();
 
                                 ItemStack ccp = gd.stack.copy();
@@ -542,25 +544,20 @@ public class GuiGuideBase extends GuiScreen {
 
         ArrayList copy = new ArrayList();
 
-        if(currentTab != null && currentTab.list != null && currentTab.list.size() > 0)
-        for(Object r : currentTab.list)
-                copy.add(r);
 
         //Add ObjectButtons based on scroll
           if (!ShowingObject && currentTab != null && !(currentTab instanceof TextGuideTab)) {
 
-                if(ObjectSearch != null && !ObjectSearch.getText().isEmpty()) {
+                    if(currentTab != null && currentTab.list != null && currentTab.list.size() > 0)
+                    for (int i = 0; i < currentTab.list.size(); i++) {
+                            ItemStack stack = StackUtils.GetObject(currentTab.list.get(i));
 
-                    //TODO Fix removal of items when they do not contain search words
-                    for (int i = 0; i < copy.size(); i++) {
-                            ItemStack stack = StackUtils.GetObject(copy.get(i));
-
-                            if (!stack.getDisplayName().contains(ObjectSearch.getText())) {
-                                copy.remove(stack);
+                            if (ObjectSearch == null || ObjectSearch.getText().isEmpty() || ObjectSearch.getText() == "" || stack.getDisplayName().toLowerCase().contains(ObjectSearch.getText().toLowerCase())) {
+                                copy.add(stack);
                             }
                         }
 
-                }
+
 
                 int PerPage = 19;
                 int m = copy.size();

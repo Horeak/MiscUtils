@@ -57,7 +57,7 @@ public class CraftingTableType extends GuideRecipeTypeRender{
             if(r instanceof IRecipe){
                 IRecipe re = (IRecipe)r;
 
-                if(StackUtils.AreStacksEqualIgnoreDamage(re.getRecipeOutput(), stack)){
+                if(StackUtils.AreStacksEqualIgnoreData(re.getRecipeOutput(), stack)){
 
                     if(j == at) {
 
@@ -126,7 +126,8 @@ public class CraftingTableType extends GuideRecipeTypeRender{
             if(r instanceof IRecipe) {
                 IRecipe res = (IRecipe) r;
 
-                if(StackUtils.AreStacksEqualIgnoreDamage(res.getRecipeOutput(), stack)){
+                if(res instanceof ShapelessOreRecipe || res instanceof ShapedOreRecipe || res instanceof ShapedRecipes || res instanceof ShapelessRecipes)
+                if(StackUtils.AreStacksEqualIgnoreData(res.getRecipeOutput(), stack)){
                     i += 1;
                 }
 
@@ -154,12 +155,11 @@ public class CraftingTableType extends GuideRecipeTypeRender{
          for(Object r : CraftingManager.getInstance().getRecipeList()) {
                if(r instanceof IRecipe){
                    IRecipe res = (IRecipe)r;
-
-                   if(StackUtils.AreStacksEqualIgnoreDamage(render, res.getRecipeOutput())){
-
+                   if(StackUtils.AreStacksEqualIgnoreData(render, res.getRecipeOutput())){
                       if(h == At){
                          render.stackSize = res.getRecipeOutput().stackSize;
                          render.setItemDamage(res.getRecipeOutput().getItemDamage());
+                         render.setTagCompound(res.getRecipeOutput().getTagCompound());
 
                       }
 

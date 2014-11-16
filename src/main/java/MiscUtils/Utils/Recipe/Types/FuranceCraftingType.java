@@ -51,7 +51,7 @@ public class FuranceCraftingType extends GuideRecipeTypeRender {
 
         Map<ItemStack, ItemStack> recipes = (Map<ItemStack, ItemStack>) FurnaceRecipes.smelting().getSmeltingList();
         for (Map.Entry<ItemStack, ItemStack> recipe : recipes.entrySet()) {
-            if(StackUtils.AreStacksEqualIgnoreDamage(recipe.getValue(), stack)) {
+            if(StackUtils.AreStacksEqualIgnoreData(recipe.getValue(), stack)) {
                 if(j == At) {
                     stacks[0] = recipe.getKey();
                 }
@@ -77,7 +77,7 @@ public class FuranceCraftingType extends GuideRecipeTypeRender {
 
         Map<ItemStack, ItemStack> recipes = (Map<ItemStack, ItemStack>) FurnaceRecipes.smelting().getSmeltingList();
         for (Map.Entry<ItemStack, ItemStack> recipe : recipes.entrySet()) {
-            if(StackUtils.AreStacksEqualIgnoreDamage(recipe.getValue(), stack)) {
+            if(StackUtils.AreStacksEqualIgnoreData(recipe.getValue(), stack)) {
                num += 1;
             }
         }
@@ -97,7 +97,7 @@ public class FuranceCraftingType extends GuideRecipeTypeRender {
         for(Object r : FurnaceRecipes.smelting().getSmeltingList().values()) {
             ItemStack sta = StackUtils.GetObject(r);
 
-            if (StackUtils.AreStacksEqualIgnoreDamage(render, sta)) {
+            if (StackUtils.AreStacksEqualIgnoreData(render, sta)) {
 
                 if (h == At) {
                     render.stackSize = sta.stackSize;
@@ -121,7 +121,7 @@ public class FuranceCraftingType extends GuideRecipeTypeRender {
 
     double burn = 0, BurnMax = 24;
 
-    public void RenderExtras(GuiScreen gui, int posX, int posY){
+    public void RenderExtras(GuiScreen gui, int posX, int posY, ItemStack stack, int at){
 
         if(burn >= BurnMax)
             burn = 0;

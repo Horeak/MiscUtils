@@ -14,8 +14,6 @@ public class StackUtils
 
 
     public static ItemStack GetObject(Object ob){
-
-
      if(ob == null)
          return null;
 
@@ -59,31 +57,32 @@ public class StackUtils
         return stacks;
     }
 
-    public static boolean AreStacksEqual(ItemStack stack1, ItemStack stack2){
-    return stack1 == null && stack2 == null ||
-            stack1 != null && stack2 == null ? false :
-            stack1 == null && stack2 != null ? false :
+    public static boolean AreStacksEqual(ItemStack stack1, ItemStack stack2, boolean IgnoreDamageValue, boolean IgnoreNBT, boolean IgnoreStackSize){
 
-                    stack1.getItem() == null && stack2.getItem() == null ||
-                            stack1.getItem() != null && stack2.getItem() == null ? false :
-                            stack1.getItem() == null && stack2.getItem() != null ? false :
+        boolean flag1 = stack1 == null && stack2 == null || stack1 != null && stack2 != null;
+        if(stack1 == null || stack2 == null)
+            return flag1;
 
-                                    stack1.getItem() == stack2.getItem() && stack1.getItemDamage() == stack2.getItemDamage();
 
-}
+        boolean flag2 = stack1.getItem() == null && stack2.getItem() == null || stack1.getItem() == stack2.getItem();
+        if(stack1.getItem() == null || stack2.getItem() == null)
+            return flag1 && flag2;
 
-    public static boolean AreStacksEqualIgnoreDamage(ItemStack stack1, ItemStack stack2){
-        return stack1 == null && stack2 == null ||
-                stack1 != null && stack2 == null ? false :
-                stack1 == null && stack2 != null ? false :
 
-                        stack1.getItem() == null && stack2.getItem() == null ||
-                                stack1.getItem() != null && stack2.getItem() == null ? false :
-                                stack1.getItem() == null && stack2.getItem() != null ? false :
+        boolean flag3 = IgnoreDamageValue ? true : stack1.getItemDamage() == 0 && stack2.getItemDamage() == 0 || stack1.getItemDamage() == stack2.getItemDamage();
+        boolean flag4 = IgnoreNBT ? true : stack1.getTagCompound() == null && stack2.getTagCompound() == null || stack1.getTagCompound() == stack2.getTagCompound();
+        boolean flag5 = IgnoreStackSize ? true : stack1.stackSize == 0 && stack2.stackSize == 0 || stack1.stackSize == stack2.stackSize;
 
-                                        stack1.getItem() == stack2.getItem();
+        return flag1 && flag2 && flag3 && flag4 && flag5;
     }
 
+    public static boolean AreStacksEqualIgnoreData(ItemStack stack1, ItemStack stack2){
+        return AreStacksEqual(stack1, stack2, true, true, true);
+    }
+
+    public static boolean AreStacksEqual(ItemStack stack1, ItemStack stack2){
+        return AreStacksEqual(stack1, stack2, false, false, false);
+    }
 
 
 }

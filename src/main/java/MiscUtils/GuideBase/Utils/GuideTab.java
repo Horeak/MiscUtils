@@ -49,8 +49,9 @@ public class GuideTab {
                         Properties prop = new Properties();
                         prop.load(inputstream);
 
+                        String key =  "block.info." + stack.getUnlocalizedName().toLowerCase().replace(" ", "_").replace("tile.", "");
 
-                        return prop.getProperty("block.info." + stack.getDisplayName().toLowerCase().replace(" ", "_"), "No info found for block! Check blockinfo file! file path: " + "\n" + "/assets/" + instance.BlockDescriptions().getResourceDomain() + "/" + instance.BlockDescriptions().getResourcePath());
+                        return prop.getProperty(key, "No info found for block! Check blockinfo file! file path: " + "\n" + "/assets/" + instance.BlockDescriptions().getResourceDomain() + "/" + instance.BlockDescriptions().getResourcePath() + "\nblock key: " + key);
 
                     }
 
@@ -71,8 +72,9 @@ public class GuideTab {
                         Properties prop = new Properties();
                         prop.load(inputstream);
 
+                        String key =  "item.info." + stack.getUnlocalizedName().toLowerCase().replace(" ", "_").replace("item.", "");
 
-                        return prop.getProperty("item.info." + stack.getDisplayName().toLowerCase().replace(" ", "_"), "No info found for item! Check iteminfo file! file path: " + "\n" + "/assets/" + instance.ItemDescriptions().getResourceDomain() + "/" + instance.ItemDescriptions().getResourcePath());
+                        return prop.getProperty(key, "No info found for item! Check iteminfo file! file path: " + "\n" + "/assets/" + instance.ItemDescriptions().getResourceDomain() + "/" + instance.ItemDescriptions().getResourcePath() + "\nitem key: " + key);
 
                     }
 
@@ -85,6 +87,8 @@ public class GuideTab {
 
         }
 
-        return "EMPTY STRING";
+
+
+        return "No file found!";
     }
 }

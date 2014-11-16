@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class RenderHelper {
 
-    protected static RenderItem itemRender = new RenderItem();
+    public static RenderItem itemRender = new RenderItem();
 
 
     public static void RenderInfoTagOverTileEntity(TileEntity tile, ArrayList<String> InfoStrings, double x, double y, double z){
@@ -214,8 +214,15 @@ public class RenderHelper {
         if(!(stack.getItem() instanceof ItemBlock)){
             GL11.glPushMatrix();
 
-            itemRender.renderItemIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y, false);
-            GL11.glEnable(GL11.GL_BLEND);
+
+
+            itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y);
+            itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y);
+
+            if(!stack.hasEffect(stack.getItem().getRenderPasses(stack.getItemDamage())))
+                GL11.glEnable(GL11.GL_BLEND);
+
+
 
             GL11.glColor4f(1F, 1F, 1F, 1F);
             net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
