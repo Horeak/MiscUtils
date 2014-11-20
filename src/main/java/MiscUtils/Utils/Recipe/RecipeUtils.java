@@ -13,7 +13,6 @@ public class RecipeUtils {
 
     public static ArrayList<GuideRecipeTypeRender> RecipeTypeRenders = new ArrayList<GuideRecipeTypeRender>();
 
-    //TODO Add mod specific recipe types. (CrystallineMagic, MiscItemsAndBlocks)
     public static void RegisterTypes(){
 
         RecipeTypeRenders.add(new CraftingTableType());

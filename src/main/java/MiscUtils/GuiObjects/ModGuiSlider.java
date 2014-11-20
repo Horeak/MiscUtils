@@ -10,15 +10,21 @@ public class ModGuiSlider extends GuiButton {
     public float sliderMaxValue = 1.0F;
     public boolean dragging = false;
     public String label;
+    public int xSize, ySize;
+    //150, 20
 
-    public ModGuiSlider(int id, int x, int y, String label, float startingValue, float maxValue) {
-            super(id, x, y, 150, 20, label);
+    public ModGuiSlider(int id, int x, int y, int xSize, int ySize, String label, float startingValue, float maxValue) {
+            super(id, x, y, xSize, ySize, label);
             
             this.label = label;
             this.sliderValue = startingValue;
             this.sliderMaxValue = maxValue;
+        this.xSize = xSize;
+        this.ySize = ySize;
     }
-    
+
+
+
 
     public int getHoverState(boolean par1) {
             return 0;

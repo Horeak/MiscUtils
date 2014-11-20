@@ -36,11 +36,9 @@ public class GuiGuideBase extends GuiScreen {
     public ResourceLocation MainTexture = new ResourceLocation(MiscUtilsMain.Id.toLowerCase(), "textures/gui/GuideGui.png");
     public ResourceLocation IconTexutre = new ResourceLocation(MiscUtilsMain.Id.toLowerCase(), "textures/gui/GuideGuiIcons.png");
 
-    //TODO Fix "Bottom" of text contents/object buttons being at the top of the page
-
     public GuideTab currentTab = null;
 
-    public float InfoScroll = 0;
+    public double InfoScroll = 0;
     public boolean InfoScrolling;
 
     public boolean Update = true;
@@ -153,7 +151,7 @@ public class GuiGuideBase extends GuiScreen {
             GL11.glPushMatrix();
             GL11.glColor4f(1F, 1F, 1F, 1F);
             Minecraft.getMinecraft().renderEngine.bindTexture(IconTexutre);
-            GL11.glTranslatef(0.0F, InfoScroll * 36.9F, 0.0F);
+            GL11.glTranslatef(0.0F, (float)(InfoScroll * 36.9F), 0.0F);
             drawTexturedModalRect(posX + 214, posY + 7, 32, 0, 12, 15);
             GL11.glPopMatrix();
         }
@@ -274,6 +272,7 @@ public class GuiGuideBase extends GuiScreen {
                 int PerPage = 16 - (Offset / 10);
                 double trans = (lines) / (ScrollMax);
 
+                //TODO Redo to properly scale it. The end of the list should always be at the bottom of the page when scrolled all the way down!!!
                 double transs = (trans * InfoScroll);
                 int trant = (int) transs;
 
@@ -545,6 +544,7 @@ public class GuiGuideBase extends GuiScreen {
         ArrayList copy = new ArrayList();
 
 
+
         //Add ObjectButtons based on scroll
           if (!ShowingObject && currentTab != null && !(currentTab instanceof TextGuideTab)) {
 
@@ -571,6 +571,7 @@ public class GuiGuideBase extends GuiScreen {
                     CanScrollText = false;
 
 
+              //TODO Redo to properly scale it. The end of the list should always be at the bottom of the page when scrolled all the way down!!!
                 double transs = (m * (InfoScroll / ScrollMax));
                 int trant = (int) transs;
 
