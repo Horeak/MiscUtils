@@ -9,6 +9,7 @@ import MiscUtils.Network.ChannelUtils;
 import MiscUtils.Proxies.ServerProxy;
 import MiscUtils.Register.BlockRegister;
 import MiscUtils.Register.ItemRegister;
+import MiscUtils.Utils.CraftingUtils;
 import MiscUtils.Utils.PlayerTickHandler;
 import MiscUtils.Utils.Recipe.RecipeUtils;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -19,7 +20,9 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
 
 @Mod(modid = MiscUtilsMain.Id, name = MiscUtilsMain.Name, version = "@VERSION@")
@@ -54,13 +57,18 @@ public class MiscUtilsMain
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 
+        GuideModRegistry.RegisterModToGuide(new MiscUtilsGuideInstance());
+
         ItemRegister ItemUtils = new ItemRegister(config, Id);
         BlockRegister BlockUtils = new BlockRegister(config, Id);
 
-        GuideModRegistry.RegisterModToGuide(new MiscUtilsGuideInstance());
-
-
         ItemUtils.Register(Guide, "GuideItem");
+
+
+        CraftingUtils CraftingUtils = new CraftingUtils(config);
+
+        CraftingUtils.AddShapelessRecipe(new ItemStack(Guide), new Object[]{Items.book, Items.dye, Items.paper});
+
 
         RecipeUtils.RegisterTypes();
 

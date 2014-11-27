@@ -2,83 +2,69 @@ package MiscUtils.GuiObjects;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.util.MathHelper;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 public class ModGuiSlider extends GuiButton {
 
-    public float sliderValue = 1.0F;
-    public float sliderMaxValue = 1.0F;
-    public boolean dragging = false;
+    public float sliderValue = 0.0F;
     public String label;
     public int xSize, ySize;
-    //150, 20
+    public boolean RenderTab = true, RenderBackground = true, RenderLabel = true;
 
-    public ModGuiSlider(int id, int x, int y, int xSize, int ySize, String label, float startingValue, float maxValue) {
-            super(id, x, y, xSize, ySize, label);
-            
-            this.label = label;
-            this.sliderValue = startingValue;
-            this.sliderMaxValue = maxValue;
+    //TODO Improve class inorder to make it easier to implement. For example with custom render instead of the normal render
+    public ModGuiSlider(int id, int x, int y, int xSize, int ySize, String label) {
+        super(id, x, y, xSize, ySize, label);
+
+        this.label = label;
         this.xSize = xSize;
         this.ySize = ySize;
     }
 
+    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
 
 
+        GL11.glPushMatrix();
+        GL11.glColor4f(1F, 1F, 1F, 1F);
 
-    public int getHoverState(boolean par1) {
-            return 0;
-    }
-
-    protected void mouseDragged(Minecraft par1Minecraft, int par2, int par3) {
-            if (this.visible) {
-                    if (this.dragging) {
-                            this.sliderValue = (float) (par2 - (this.xPosition + 4)) / (float) (this.width - 8);
-
-                            if (this.sliderValue < 0.0F) {
-                                    this.sliderValue = 0.0F;
-                            }
-
-                            if (this.sliderValue > 1.0F) {
-                                    this.sliderValue = 1.0F;
-                            }
-
-                    }
-
-                    this.displayString = label + ": " + (int) (sliderValue * sliderMaxValue);
-                    
-                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                    this.drawTexturedModalRect(this.xPosition + (int) (this.sliderValue * (float) (this.width - 8)), this.yPosition, 0, 66, 4, 20);
-                    this.drawTexturedModalRect(this.xPosition + (int) (this.sliderValue * (float) (this.width - 8)) + 4, this.yPosition, 196, 66, 4, 20);
-                    
+            if (Mouse.isButtonDown(0)) {
+                if(mouseX >= xPosition && mouseX < xPosition + xSize && mouseY >= yPosition && mouseY < yPosition + ySize) {
+                    //TODO Make it work correctly with the correct xSize and prevent it from going outside of its own size
+                    sliderValue = MathHelper.clamp_float((float)(mouseX - (xPosition)) / (float)(width - 6), 0F, 1F);
+                }
             }
+
+        if(sliderValue > 1F)
+            sliderValue = 1F;
+
+
+        if (RenderBackground) {
+            mc.getTextureManager().bindTexture(buttonTextures);
+
+            drawTexturedModalRect(xPosition, yPosition, 0, 46, width / 2, height);
+            drawTexturedModalRect(xPosition + width / 2, yPosition, 200 - width / 2, 46, width / 2, height);
+        }
+
+
+        if (RenderTab) {
+            int xSize = 6;
+            int x1 = xPosition + ((int) (sliderValue * (width - 8)));
+
+            drawTexturedModalRect(x1, yPosition, 0, 66, xSize, height);
+            drawTexturedModalRect(x1 + xSize, yPosition, 204 - xSize, 66, 8 - xSize, height);
+
+        }
+
+
+        if(RenderLabel) {
+            drawCenteredString(mc.fontRenderer, label, xPosition + (xSize / 2), yPosition + (ySize / 4), 0xffffff);
+        }
+
+        GL11.glPopMatrix();
+
     }
 
-    public boolean mousePressed(Minecraft par1Minecraft, int par2, int par3) {
-    	
-    	
-            if (super.mousePressed(par1Minecraft, par2, par3)) {
-                    this.sliderValue = (float) (par2 - (this.xPosition + 4)) / (float) (this.width - 8);
-
-                    if (this.sliderValue < 0.0F) {
-                            this.sliderValue = 0.0F;
-                    }
-
-                    if (this.sliderValue > 1.0F) {
-                            this.sliderValue = 1.0F;
-                    }
-
-                    if(!dragging)
-                    this.dragging = true;
-                    else
-                    	dragging = false;
-                    return true;
-            } else {
-                    return false;
-            }
-    }
-
-    public void mouseReleased(int par1, int par2) {
-            this.dragging = false;
-    }
 }
+
+
