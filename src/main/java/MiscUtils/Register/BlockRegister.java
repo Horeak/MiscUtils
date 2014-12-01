@@ -2,14 +2,20 @@ package MiscUtils.Register;
 
 import MiscUtils.Config.ConfigBase;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BlockRegister {
 
     ConfigBase config;
     String Id;
+
+    public HashMap<String, Block> map = new HashMap<String, Block>();
 
     public BlockRegister(ConfigBase config, String ModId){
         this.config = config;
@@ -23,6 +29,8 @@ public class BlockRegister {
 
             block.setUnlocalizedName(Name.toLowerCase().replace(" ", "_"));
             GameRegistry.registerBlock(block, Name.toLowerCase().replace(" ", "_"));
+
+            map.put((Name.toLowerCase().replace(" ", "_")), block);
         }
     }
 
@@ -34,6 +42,8 @@ public class BlockRegister {
 
             Register(block, Name);
             GameRegistry.registerTileEntity(tileClass, "["+Id+"]" + Name);
+
+            map.put((Name.toLowerCase().replace(" ", "_")), block);
         }
     }
 
@@ -46,6 +56,8 @@ public class BlockRegister {
 
             Block.setUnlocalizedName(Name.toLowerCase().replace(" ", "_"));
             GameRegistry.registerBlock(Block, itemclass, Name.toLowerCase().replace(" ", "_"));
+
+            map.put((Name.toLowerCase().replace(" ", "_")), Block);
         }
     }
 
@@ -58,6 +70,15 @@ public class BlockRegister {
             Block.setUnlocalizedName(Name.toLowerCase().replace(" ", "_"));
             GameRegistry.registerBlock(Block, itemclass, Name.toLowerCase().replace(" ", "_"));
             GameRegistry.registerTileEntity(tileClass, "["+Id+"]" + Name);
+
+            map.put((Name.toLowerCase().replace(" ", "_")), Block);
         }
+    }
+
+    public void RegisterIcons(){
+        for(Map.Entry<String, Block> entities : map.entrySet()){
+            Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getModelManager().getBlockModelShapes().func_178123_a(entities.getValue());
+        }
+
     }
 }

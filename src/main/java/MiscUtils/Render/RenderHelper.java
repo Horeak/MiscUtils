@@ -135,8 +135,8 @@ public class RenderHelper {
 
 
 
-            itemRender.func_175030_a(fontRendererObj, stack, x, y);
-            itemRender.func_180453_a(fontRendererObj, stack, x, y, "");
+            itemRender.func_180450_b(stack, x, y);
+            itemRender.func_180453_a(fontRendererObj, stack, x, y, null);
 
             if(!stack.hasEffect())
                 GL11.glEnable(GL11.GL_BLEND);
@@ -165,8 +165,8 @@ public class RenderHelper {
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F / 1.0F, 240F / 1.0F);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-            itemRender.func_175030_a(fontRendererObj, stack, x, y);
-            //itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y, null);
+            itemRender.func_180450_b(stack, x, y);
+            itemRender.func_180453_a(fontRendererObj, stack, x, y, null);
 
             GL11.glEnable(GL11.GL_LIGHTING);
             net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();

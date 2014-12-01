@@ -45,7 +45,10 @@ public class MiscUtilsMain
 
     public static boolean IsLoadedInDev = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 
-    public static Item Guide = new ItemGuide().setCreativeTab(CreativeTabs.tabMisc).setUnlocalizedName("itemguide");
+    public static Item Guide = new ItemGuide().setCreativeTab(CreativeTabs.tabMisc);
+
+    ItemRegister ItemUtils = null;
+    BlockRegister BlockUtils = null;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -59,16 +62,14 @@ public class MiscUtilsMain
 
         GuideModRegistry.RegisterModToGuide(new MiscUtilsGuideInstance());
 
-        ItemRegister ItemUtils = new ItemRegister(config, Id);
-        BlockRegister BlockUtils = new BlockRegister(config, Id);
+        ItemUtils = new ItemRegister(config, Id);
+        BlockUtils = new BlockRegister(config, Id);
 
         ItemUtils.Register(Guide, "GuideItem");
 
 
         CraftingUtils CraftingUtils = new CraftingUtils(config);
-
         CraftingUtils.AddShapelessRecipe(new ItemStack(Guide), new Object[]{Items.book, Items.dye, Items.paper});
-
 
         RecipeUtils.RegisterTypes();
 
@@ -76,6 +77,9 @@ public class MiscUtilsMain
 
     @Mod.EventHandler
     public void Init(FMLInitializationEvent event){
+            ItemUtils.RegisterIcons();
+            BlockUtils.RegisterIcons();
+
 
 
         FMLCommonHandler.instance().bus().register(new PlayerTickHandler());
