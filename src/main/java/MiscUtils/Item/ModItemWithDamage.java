@@ -1,8 +1,6 @@
 package MiscUtils.Item;
 
 import com.google.common.collect.Sets;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -23,6 +23,8 @@ public class ModItemWithDamage extends ItemTool{
     {
         return false;
     }
+
+
     int MaxDamage;
 
     protected ModItemWithDamage(int ItemMaxDamage) {
@@ -59,9 +61,8 @@ public class ModItemWithDamage extends ItemTool{
     }
 
     @Override
-    public float getDigSpeed(ItemStack stack, Block block, int meta)
+    public float getDigSpeed(ItemStack stack, net.minecraft.block.state.IBlockState state)
     {
-
         return 0.01F;
     }
 

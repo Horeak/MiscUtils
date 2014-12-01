@@ -2,6 +2,7 @@ package MiscUtils.Handlers;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 import java.awt.*;
@@ -21,7 +22,7 @@ public class ParticleHelper {
         Spawn = ConfigSpawn;
     }
 
-    public void SpawnParticle(String particleName, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
+    public void SpawnParticle(EnumParticleTypes particleName, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
 
         if(Spawn){
             world.spawnParticle(particleName, x, y, z, xSpeed, ySpeed, zSpeed);
@@ -29,7 +30,7 @@ public class ParticleHelper {
     }
 
 
-    public void SpawnParticleAroundBlock(String Name, double x, double y, double z, double rn){
+    public void SpawnParticleAroundBlock(EnumParticleTypes Name, double x, double y, double z, double rn){
         float f1 = (float) y + 0.6F + rand.nextFloat() * 6.0F / 16.0F;
         double remove = rn - 0.2;
 
@@ -65,7 +66,7 @@ public class ParticleHelper {
 
 
 
-    public void SpawnParticleRandomDr(String Name, double x, double y, double z, double width, int amount){
+    public void SpawnParticleRandomDr(EnumParticleTypes Name, double x, double y, double z, double width, int amount){
         for (int i = 0; i < amount; ++i) {
             double d0 = rand.nextGaussian() * 0.02D;
             double d1 = rand.nextGaussian() * 0.02D;

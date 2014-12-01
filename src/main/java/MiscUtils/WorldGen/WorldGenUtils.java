@@ -1,6 +1,7 @@
 package MiscUtils.WorldGen;
 
 import MiscUtils.Config.ConfigBase;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -21,9 +22,9 @@ public class WorldGenUtils {
                     list.add(Biomes[i]);
 
 
-            if(list.contains(world.getBiomeGenForCoords(x, y)) || list.size() <= 0) {
+            if(list.contains(world.getBiomeGenForCoords(new BlockPos(x, y, z))) || list.size() <= 0) {
                 for (int j = 0; j < Ch; j++) {
-                    gen.generate(world, rand, x + rand.nextInt(16), y + rand.nextInt(MaxY), z + rand.nextInt(16));
+                    gen.generate(world, rand, new BlockPos(x + rand.nextInt(16), y + rand.nextInt(MaxY), z + rand.nextInt(16)));
                 }
             }
 

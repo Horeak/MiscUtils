@@ -1,12 +1,12 @@
 package MiscUtils.Network;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.FMLEmbeddedChannel;
-import cpw.mods.fml.common.network.FMLOutboundHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.Packet;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.network.FMLEmbeddedChannel;
+import net.minecraftforge.fml.common.network.FMLOutboundHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -24,7 +24,7 @@ public class PacketHandler {
 
         for(EntityPlayer pl : list) {
 
-            if(pl.getCommandSenderName().equalsIgnoreCase(pla.getCommandSenderName()))
+            if(pl.getName().equalsIgnoreCase(pla.getName()))
                 continue;
 
             channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
@@ -84,7 +84,7 @@ public class PacketHandler {
         {
             EntityPlayer player1 = (EntityPlayer)FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList.get(i);
 
-            if(player.getCommandSenderName().equalsIgnoreCase(player1.getCommandSenderName()))
+            if(player.getName().equalsIgnoreCase(player1.getName()))
             {
                 continue;
             }

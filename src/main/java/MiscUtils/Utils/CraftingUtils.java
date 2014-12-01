@@ -1,13 +1,13 @@
 package MiscUtils.Utils;
 
 import MiscUtils.Config.ConfigBase;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -20,9 +20,9 @@ public class CraftingUtils {
 
     }
 
-    public void RegisterSmelting(ItemStack Input, ItemStack Output, float Xp){
+    public void RegisterSmelting(ItemStack Input, ItemStack Output){
         if(StackEnabled(Output) && StackEnabled(Input))
-            FurnaceRecipes.smelting().func_151394_a(Input, Output, Xp);
+            FurnaceRecipes.instance().getSmeltingList().put(Input, Output);
 
     }
 

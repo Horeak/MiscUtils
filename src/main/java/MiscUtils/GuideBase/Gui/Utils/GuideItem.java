@@ -18,13 +18,13 @@ public class GuideItem extends GuiButton {
     public void drawButton(Minecraft mc, int x, int y)
     {
 
-        this.field_146123_n = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
+        this.hovered = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
         this.mouseDragged(mc, x, y);
 
         GL11.glPushMatrix();
 
         if(stack != null)
-            MiscUtils.Render.RenderHelper.drawItemStack(mc.fontRenderer, stack, xPosition, yPosition);
+            MiscUtils.Render.RenderHelper.drawItemStack(mc.fontRendererObj, stack, xPosition, yPosition);
 
 
         GL11.glPopMatrix();
@@ -32,7 +32,7 @@ public class GuideItem extends GuiButton {
 
     }
 
-    public void func_146113_a(SoundHandler p_146113_1_)
+    public void playPressSound(SoundHandler p_146113_1_)
     {
     }
 }

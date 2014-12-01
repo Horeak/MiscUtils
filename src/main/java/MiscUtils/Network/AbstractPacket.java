@@ -1,8 +1,8 @@
 package MiscUtils.Network;
 
-import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
 
 public abstract class AbstractPacket
 {

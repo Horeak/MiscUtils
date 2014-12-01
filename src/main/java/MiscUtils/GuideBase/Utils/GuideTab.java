@@ -1,11 +1,11 @@
 package MiscUtils.GuideBase.Utils;
 
 import MiscUtils.Utils.StackUtils;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StringTranslate;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.io.InputStream;
 import java.util.ArrayList;

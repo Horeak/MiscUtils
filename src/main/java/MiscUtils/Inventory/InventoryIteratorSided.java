@@ -3,7 +3,7 @@ package MiscUtils.Inventory;
 import MiscUtils.Inventory.InventoryIterator.IInvSlot;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import java.util.Iterator;
 
@@ -15,7 +15,7 @@ class InventoryIteratorSided implements Iterable<IInvSlot> {
     private final ISidedInventory inv;
     private final int side;
 
-    InventoryIteratorSided(ISidedInventory inv, ForgeDirection side) {
+    InventoryIteratorSided(ISidedInventory inv, EnumFacing side) {
         this.inv = inv;
                 this.side = side.ordinal();
     }
@@ -23,7 +23,7 @@ class InventoryIteratorSided implements Iterable<IInvSlot> {
     @Override
     public Iterator<IInvSlot> iterator() {
         return new Iterator<IInvSlot>() {
-            int[] slots = inv.getAccessibleSlotsFromSide(side);
+            int[] slots = inv.getSlotsForFace(EnumFacing.getFront(side));
             int index = 0;
 
             @Override
@@ -64,12 +64,12 @@ class InventoryIteratorSided implements Iterable<IInvSlot> {
 
         @Override
         public boolean canPutStackInSlot(ItemStack stack) {
-            return inv.canInsertItem(slot, stack, side);
+            return inv.canInsertItem(slot, stack, EnumFacing.getFront(side));
         }
 
         @Override
         public boolean canTakeStackFromSlot(ItemStack stack) {
-            return inv.canExtractItem(slot, stack, side);
+            return inv.canExtractItem(slot, stack, EnumFacing.getFront(side));
         }
 
         @Override

@@ -25,20 +25,20 @@ public class GuideModSelectionButton extends GuiButton {
 
 
     public ResourceLocation IconTexutre = new ResourceLocation(MiscUtilsMain.Id.toLowerCase(), "textures/gui/GuideGuiIcons.png");
-    protected static RenderItem itemRender = new RenderItem();
+    protected static RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
 
     public void drawButton(Minecraft mc, int x, int y)
     {
 
         GL11.glPushMatrix();
             mc.getTextureManager().bindTexture(IconTexutre);
-            this.field_146123_n = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
+            this.hovered = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
 
 
             this.mouseDragged(mc, x, y);
             int mode = 0;
 
-             if (this.field_146123_n)
+             if (this.hovered)
             {
                 mode = 1;
             }
@@ -60,7 +60,7 @@ public class GuideModSelectionButton extends GuiButton {
         }
 
         if(instance.ModPageDisplay() != null)
-            RenderHelper.drawItemStack(mc.fontRenderer, instance.ModPageDisplay(), xx + 7, yy + 5);
+            RenderHelper.drawItemStack(mc.fontRendererObj, instance.ModPageDisplay(), xx + 7, yy + 5);
 
 
         GL11.glPopMatrix();

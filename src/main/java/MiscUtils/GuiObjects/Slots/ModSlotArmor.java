@@ -4,9 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 public class ModSlotArmor extends Slot{
 	
@@ -23,11 +21,6 @@ public class ModSlotArmor extends Slot{
     {
         Item item = (par1ItemStack == null ? null : par1ItemStack.getItem());
         return item != null && item.isValidArmor(par1ItemStack, ArmorType, Player);
-    }
-    
-    public IIcon getBackgroundIconIndex()
-    {
-        return ItemArmor.func_94602_b(this.ArmorType);
     }
 
 }

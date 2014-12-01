@@ -1,11 +1,9 @@
 package MiscUtils.Inventory;
 
 
-
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Used from BuildCraft source
@@ -13,16 +11,16 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class Position {
 
         public double x, y, z;
-        public ForgeDirection orientation;
+        public EnumFacing orientation;
 
         public Position(double ci, double cj, double ck) {
                 x = ci;
                 y = cj;
                 z = ck;
-                orientation = ForgeDirection.UNKNOWN;
+                orientation = null;
         }
 
-        public Position(double ci, double cj, double ck, ForgeDirection corientation) {
+        public Position(double ci, double cj, double ck, EnumFacing corientation) {
                 x = ci;
                 y = cj;
                 z = ck;
@@ -41,13 +39,13 @@ public class Position {
                 y = nbttagcompound.getDouble("j");
                 z = nbttagcompound.getDouble("k");
 
-                orientation = ForgeDirection.UNKNOWN;
+                orientation = null;
         }
 
         public Position(TileEntity tile) {
-                x = tile.xCoord;
-                y = tile.yCoord;
-                z = tile.zCoord;
+                x = tile.getPos().getX();
+                y = tile.getPos().getY();
+                z = tile.getPos().getZ();
         }
 
 

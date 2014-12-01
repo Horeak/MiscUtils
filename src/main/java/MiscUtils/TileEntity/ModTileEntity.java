@@ -6,17 +6,19 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 
 public class ModTileEntity extends TileEntity {
 
-    protected ForgeDirection orientation;
+    protected EnumFacing orientation;
     protected byte state;
     protected String customName;
 
     public ModTileEntity() {
 
-        orientation = ForgeDirection.SOUTH;
+        orientation =
+        EnumFacing.SOUTH;
         state = 0;
         customName = "";
     }
@@ -25,27 +27,27 @@ public class ModTileEntity extends TileEntity {
     public Packet getDescriptionPacket() {
         NBTTagCompound tag = new NBTTagCompound();
         this.writeToNBT(tag);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+        return new S35PacketUpdateTileEntity(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ()), 1, tag);
     }
 
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-        readFromNBT(packet.func_148857_g());
+        readFromNBT(packet.getNbtCompound());
     }
 
-    public ForgeDirection getOrientation() {
+    public EnumFacing getOrientation() {
 
         return orientation;
     }
 
-    public void setOrientation(ForgeDirection orientation) {
+    public void setOrientation(EnumFacing orientation) {
 
         this.orientation = orientation;
     }
 
     public void setOrientation(int orientation) {
 
-        this.orientation = ForgeDirection.getOrientation(orientation);
+        this.orientation = EnumFacing.getFront(orientation);
     }
 
     public short getState() {

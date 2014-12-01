@@ -25,7 +25,7 @@ public class GuideTabSelectionButton extends GuiButton {
     }
 
     public ResourceLocation IconTexutre = new ResourceLocation(MiscUtilsMain.Id.toLowerCase(), "textures/gui/GuideGuiIcons.png");
-    protected static RenderItem itemRender = new RenderItem();
+    protected static RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
 
     public void drawButton(Minecraft mc, int x, int y)
     {
@@ -33,13 +33,13 @@ public class GuideTabSelectionButton extends GuiButton {
         GL11.glPushMatrix();
         GL11.glColor4f(1F, 1F, 1F, 1F);
             mc.getTextureManager().bindTexture(IconTexutre);
-            this.field_146123_n = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
+            this.hovered = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
 
 
             this.mouseDragged(mc, x, y);
             int mode = 0;
 
-             if (this.field_146123_n)
+             if (this.hovered)
             {
                 mode = 1;
             }
@@ -64,7 +64,7 @@ public class GuideTabSelectionButton extends GuiButton {
 
 
         if(instance.stack != null)
-                MiscUtils.Render.RenderHelper.drawItemStack(mc.fontRenderer, instance.stack, xx + 7, yy + 5);
+                MiscUtils.Render.RenderHelper.drawItemStack(mc.fontRendererObj, instance.stack, xx + 7, yy + 5);
 
         GL11.glPopMatrix();
     }

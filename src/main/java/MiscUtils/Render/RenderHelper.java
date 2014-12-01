@@ -11,10 +11,9 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -23,23 +22,25 @@ import java.util.ArrayList;
 
 public class RenderHelper {
 
-    public static RenderItem itemRender = new RenderItem();
+    public static RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
+
+
 
 
     public static void RenderInfoTagOverTileEntity(TileEntity tile, ArrayList<String> InfoStrings, double x, double y, double z){
         MovingObjectPosition mop = RayTracing.instance().getTarget();
-        RenderManager manager = RenderManager.instance;
+        RenderManager manager = Minecraft.getMinecraft().getRenderManager();
 
 
 
 
         if(mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
-            if (mop.blockX == tile.xCoord && mop.blockY == tile.yCoord && mop.blockZ == tile.zCoord) {
+            if (mop.func_178782_a().getX() == tile.getPos().getX() && mop.func_178782_a().getY() == tile.getPos().getX() && mop.func_178782_a().getZ() == tile.getPos().getZ()) {
 
-                ForgeDirection sideHit = ForgeDirection.getOrientation(mop.sideHit);
+                EnumFacing sideHit = EnumFacing.getFront(mop.field_178784_b.getIndex());
 
                 float q = 0.8F;
-                float xOffset = (sideHit.offsetX * q), yOffset = (sideHit.offsetY * q), zOffset = (sideHit.offsetZ * q);
+                float xOffset = (sideHit.getFrontOffsetX() * q), yOffset = (sideHit.getFrontOffsetY() * q), zOffset = (sideHit.getFrontOffsetZ() * q);
 
 
                 GL11.glPushMatrix();
@@ -52,7 +53,7 @@ public class RenderHelper {
 
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-                Block block = tile.getWorldObj().getBlock(tile.xCoord, tile.yCoord, tile.zCoord);
+                Block block = tile.getWorld().getBlockState(new BlockPos(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ())).getBlock();
                 double g = (block.getBlockBoundsMaxY() - block.getBlockBoundsMinY()) * 1.2;
 
                 GL11.glPushMatrix();
@@ -66,9 +67,9 @@ public class RenderHelper {
                 GL11.glDepthMask(false);
                 GL11.glEnable(GL11.GL_BLEND);
                 OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-                Tessellator tessellator = Tessellator.instance;
+                Tessellator tessellator = Tessellator.getInstance();
                 GL11.glDisable(GL11.GL_TEXTURE_2D);
-                tessellator.startDrawingQuads();
+                tessellator.getWorldRenderer().startDrawingQuads();
 
                 int j = 0;
 
@@ -82,11 +83,11 @@ public class RenderHelper {
 
                 double Height = 8.0D * InfoStrings.size();
 
-                tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
-                tessellator.addVertex((double) (-j - 1), -1.0D, 0.0D);
-                tessellator.addVertex((double) (-j - 1), Height, 0.0D);
-                tessellator.addVertex((double) (j + 1), Height, 0.0D);
-                tessellator.addVertex((double) (j + 1), -1.0D, 0.0D);
+                tessellator.getWorldRenderer().func_178960_a(0.0F, 0.0F, 0.0F, 0.25F);
+                tessellator.getWorldRenderer().addVertex((double) (-j - 1), -1.0D, 0.0D);
+                tessellator.getWorldRenderer().addVertex((double) (-j - 1), Height, 0.0D);
+                tessellator.getWorldRenderer().addVertex((double) (j + 1), Height, 0.0D);
+                tessellator.getWorldRenderer().addVertex((double) (j + 1), -1.0D, 0.0D);
                 tessellator.draw();
 
 
@@ -112,99 +113,17 @@ public class RenderHelper {
     {
         float f = 0.00390625F;
         float f1 = 0.00390625F;
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV((double)(p_73729_1_ + 0), (double)(p_73729_2_ + p_73729_6_), (double)zLevel, (double)((float)(p_73729_3_ + 0) * f), (double)((float)(p_73729_4_ + p_73729_6_) * f1));
-        tessellator.addVertexWithUV((double)(p_73729_1_ + p_73729_5_), (double)(p_73729_2_ + p_73729_6_), (double)zLevel, (double)((float)(p_73729_3_ + p_73729_5_) * f), (double)((float)(p_73729_4_ + p_73729_6_) * f1));
-        tessellator.addVertexWithUV((double)(p_73729_1_ + p_73729_5_), (double)(p_73729_2_ + 0), (double)zLevel, (double)((float)(p_73729_3_ + p_73729_5_) * f), (double)((float)(p_73729_4_ + 0) * f1));
-        tessellator.addVertexWithUV((double)(p_73729_1_ + 0), (double)(p_73729_2_ + 0), (double)zLevel, (double)((float)(p_73729_3_ + 0) * f), (double)((float)(p_73729_4_ + 0) * f1));
+        Tessellator tessellator = Tessellator.getInstance();
+        tessellator.getWorldRenderer().startDrawingQuads();
+        tessellator.getWorldRenderer().addVertexWithUV((double)(p_73729_1_ + 0), (double)(p_73729_2_ + p_73729_6_), (double)zLevel, (double)((float)(p_73729_3_ + 0) * f), (double)((float)(p_73729_4_ + p_73729_6_) * f1));
+        tessellator.getWorldRenderer().addVertexWithUV((double)(p_73729_1_ + p_73729_5_), (double)(p_73729_2_ + p_73729_6_), (double)zLevel, (double)((float)(p_73729_3_ + p_73729_5_) * f), (double)((float)(p_73729_4_ + p_73729_6_) * f1));
+        tessellator.getWorldRenderer().addVertexWithUV((double)(p_73729_1_ + p_73729_5_), (double)(p_73729_2_ + 0), (double)zLevel, (double)((float)(p_73729_3_ + p_73729_5_) * f), (double)((float)(p_73729_4_ + 0) * f1));
+        tessellator.getWorldRenderer().addVertexWithUV((double)(p_73729_1_ + 0), (double)(p_73729_2_ + 0), (double)zLevel, (double)((float)(p_73729_3_ + 0) * f), (double)((float)(p_73729_4_ + 0) * f1));
         tessellator.draw();
     }
 
 
 
-    public static void RenderInventoryBlockWithColor(IItemRenderer.ItemRenderType renderType, ItemStack stack, Color color){
-
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-
-
-        boolean mustundotranslate = false;
-        switch (renderType) {
-            case EQUIPPED:
-            case EQUIPPED_FIRST_PERSON: {
-                break;
-            }
-            case ENTITY:
-            case INVENTORY: {
-
-                GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-                mustundotranslate = true;
-                break;
-            }
-            default:
-                break;
-        }
-
-
-        Block bl = Block.getBlockFromItem(stack.getItem());
-
-
-        IIcon icon = bl.getIcon(5, stack.getItemDamage());
-        tessellator.setNormal(1.0F, 0.0F, 0.0F);
-         tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
-        tessellator.addVertexWithUV(1.0, 0.0, 0.0, (double)icon.getMaxU(), (double)icon.getMaxV());
-        tessellator.addVertexWithUV(1.0, 1.0, 0.0, (double)icon.getMaxU(), (double)icon.getMinV());
-        tessellator.addVertexWithUV(1.0, 1.0, 1.0, (double)icon.getMinU(), (double)icon.getMinV());
-        tessellator.addVertexWithUV(1.0, 0.0, 1.0, (double)icon.getMinU(), (double)icon.getMaxV());
-
-        icon = bl.getIcon(4, stack.getItemDamage());
-        tessellator.setNormal(-1.0F, 0.0F, 0.0F);
-         tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
-        tessellator.addVertexWithUV(0.0, 0.0, 1.0, (double)icon.getMaxU(), (double)icon.getMaxV());
-        tessellator.addVertexWithUV(0.0, 1.0, 1.0, (double)icon.getMaxU(), (double)icon.getMinV());
-        tessellator.addVertexWithUV(0.0, 1.0, 0.0, (double)icon.getMinU(), (double)icon.getMinV());
-        tessellator.addVertexWithUV(0.0, 0.0, 0.0, (double)icon.getMinU(), (double)icon.getMaxV());
-
-
-        icon = stack.getItem().getIconFromDamage(2);
-        tessellator.setNormal(0.0F, 0.0F, -1.0F);
-         tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
-        tessellator.addVertexWithUV(0.0, 0.0, 0.0, (double)icon.getMaxU(), (double)icon.getMaxV());
-        tessellator.addVertexWithUV(0.0, 1.0, 0.0, (double)icon.getMaxU(), (double)icon.getMinV());
-        tessellator.addVertexWithUV(1.0, 1.0, 0.0, (double)icon.getMinU(), (double)icon.getMinV());
-        tessellator.addVertexWithUV(1.0, 0.0, 0.0, (double)icon.getMinU(), (double)icon.getMaxV());
-
-
-        icon = bl.getIcon(3, stack.getItemDamage());
-        tessellator.setNormal(0.0F, 0.0F, -1.0F);
-         tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
-        tessellator.addVertexWithUV(1.0, 0.0, 1.0, (double)icon.getMaxU(), (double)icon.getMaxV());
-        tessellator.addVertexWithUV(1.0, 1.0, 1.0, (double)icon.getMaxU(), (double)icon.getMinV());
-        tessellator.addVertexWithUV(0.0, 1.0, 1.0, (double)icon.getMinU(), (double)icon.getMinV());
-        tessellator.addVertexWithUV(0.0, 0.0, 1.0, (double)icon.getMinU(), (double)icon.getMaxV());
-
-        icon = bl.getIcon(1, stack.getItemDamage());
-        tessellator.setNormal(0.0F, 1.0F, 0.0F);
-         tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
-        tessellator.addVertexWithUV(1.0, 1.0, 1.0, (double)icon.getMaxU(), (double)icon.getMaxV());
-        tessellator.addVertexWithUV(1.0, 1.0, 0.0, (double)icon.getMaxU(), (double)icon.getMinV());
-        tessellator.addVertexWithUV(0.0, 1.0, 0.0, (double)icon.getMinU(), (double)icon.getMinV());
-        tessellator.addVertexWithUV(0.0, 1.0, 1.0, (double)icon.getMinU(), (double)icon.getMaxV());
-
-        icon = bl.getIcon(0, stack.getItemDamage());
-        tessellator.setNormal(0.0F, -1.0F, 0.0F);
-        tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
-        tessellator.addVertexWithUV(0.0, 0.0, 1.0, (double)icon.getMaxU(), (double)icon.getMaxV());
-        tessellator.addVertexWithUV(0.0, 0.0, 0.0, (double)icon.getMaxU(), (double)icon.getMinV());
-        tessellator.addVertexWithUV(1.0, 0.0, 0.0, (double)icon.getMinU(), (double)icon.getMinV());
-        tessellator.addVertexWithUV(1.0, 0.0, 1.0, (double)icon.getMinU(), (double)icon.getMaxV());
-
-        tessellator.draw();
-
-        if (mustundotranslate) GL11.glTranslatef(0.5F, 0.5F, 0.5F);
-
-    }
 
 
     public static void drawItemStack(FontRenderer fontRendererObj, ItemStack stack, int x, int y)
@@ -216,10 +135,10 @@ public class RenderHelper {
 
 
 
-            itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y);
-            itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y);
+            itemRender.func_175030_a(fontRendererObj, stack, x, y);
+            itemRender.func_180453_a(fontRendererObj, stack, x, y, "");
 
-            if(!stack.hasEffect(stack.getItem().getRenderPasses(stack.getItemDamage())))
+            if(!stack.hasEffect())
                 GL11.glEnable(GL11.GL_BLEND);
 
 
@@ -246,8 +165,8 @@ public class RenderHelper {
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F / 1.0F, 240F / 1.0F);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-            itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y);
-            itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y, null);
+            itemRender.func_175030_a(fontRendererObj, stack, x, y);
+            //itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y, null);
 
             GL11.glEnable(GL11.GL_LIGHTING);
             net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();

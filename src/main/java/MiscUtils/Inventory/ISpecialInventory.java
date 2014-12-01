@@ -2,7 +2,7 @@ package MiscUtils.Inventory;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 
 /**
@@ -21,7 +21,7 @@ public interface ISpecialInventory extends IInventory {
      * Orientation the ItemStack is offered from.
      * @return Amount of items used from the passed stack.
      */
-    int addItem(ItemStack stack, boolean doAdd, ForgeDirection from);
+    int addItem(ItemStack stack, boolean doAdd, EnumFacing from);
 
     /**
      * Requests items to be extracted from the inventory
@@ -35,6 +35,6 @@ public interface ISpecialInventory extends IInventory {
      * Maximum amount of items to extract (spread over all returned item stacks)
      * @return Array of item stacks that were/would be extracted from the inventory
      */
-    ItemStack[] extractItem(boolean doRemove, ForgeDirection from, int maxItemCount);
+    ItemStack[] extractItem(boolean doRemove, EnumFacing from, int maxItemCount);
 
 }

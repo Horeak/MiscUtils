@@ -27,6 +27,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -64,7 +65,7 @@ public class GuiGuideBase extends GuiScreen {
     ModGuideInstance Current = null;
 
 
-    protected void mouseClicked(int x, int y, int g)
+    protected void mouseClicked(int x, int y, int g)throws IOException
     {
         super.mouseClicked(x, y, g);
 
@@ -162,7 +163,7 @@ public class GuiGuideBase extends GuiScreen {
 
         //Render text pages
         if(!ShowingObject) {
-            fontRendererObj.drawString(EnumChatFormatting.UNDERLINE + StatCollector.translateToLocal(Current.Id) + ": " + StatCollector.translateToLocal(currentTab.Name), posX + textX, posY + 4, new Color(91, 91, 91).getRGB(), false);
+            fontRendererObj.drawString(EnumChatFormatting.UNDERLINE + StatCollector.translateToLocal(Current.Id) + ": " + StatCollector.translateToLocal(currentTab.Name), posX + textX, posY + 4, new Color(91, 91, 91).getRGB());
 
             if (currentTab instanceof TextGuideTab) {
                 String Text = ((TextGuideTab) currentTab).GetText();
@@ -189,7 +190,7 @@ public class GuiGuideBase extends GuiScreen {
                     for (int line = lineMin; line < lineMax; line++) {
 
                         if (list.size() > line)
-                            fontRendererObj.drawString((String) list.get(line), posX + textX, ((posY + textY + ((line - lineMin) * 10))), new Color(107, 107, 107).getRGB(), false);
+                            fontRendererObj.drawString((String) list.get(line), posX + textX, ((posY + textY + ((line - lineMin) * 10))), new Color(107, 107, 107).getRGB());
 
                     }
 
@@ -205,7 +206,7 @@ public class GuiGuideBase extends GuiScreen {
 
 
         if (ShowingObject && ObjectShowing != null){
-            fontRendererObj.drawString(ObjectShowing.getDisplayName(), posX + textX, posY + 4, new Color(91, 91, 91).getRGB(), false);
+            fontRendererObj.drawString(ObjectShowing.getDisplayName(), posX + textX, posY + 4, new Color(91, 91, 91).getRGB());
             String Text = currentTab.GetInfoForStack(ObjectShowing);
 
             int xx = posX + 188;
@@ -247,7 +248,7 @@ public class GuiGuideBase extends GuiScreen {
 
                     String nm = (EnumChatFormatting.UNDERLINE) + StatCollector.translateToLocal(res.GetName());
 
-                    fontRendererObj.drawString(nm, posX + 100 - fontRendererObj.getStringWidth(nm) / 2, posY + 20, new Color(108, 108, 108).getRGB(), false);
+                    fontRendererObj.drawString(nm, posX + 100 - fontRendererObj.getStringWidth(nm) / 2, posY + 20, new Color(108, 108, 108).getRGB());
 
                     textY += res.GetRenderYSize();
                     Offset = res.GetRenderYSize();
@@ -288,7 +289,7 @@ public class GuiGuideBase extends GuiScreen {
                     for (int line = lineMin; line < lineMax; line++) {
 
                         if (list.size() > line)
-                            fontRendererObj.drawString((String) list.get(line), posX + textX, ((posY + textY + 20 + ((line - lineMin) * 10))), new Color(107, 107, 107).getRGB(), false);
+                            fontRendererObj.drawString((String) list.get(line), posX + textX, ((posY + textY + 20 + ((line - lineMin) * 10))), new Color(107, 107, 107).getRGB());
 
                     }
 
@@ -311,7 +312,7 @@ public class GuiGuideBase extends GuiScreen {
         //Render tooltip info/names
         for (int i = 0; i < buttonList.size(); i++) {
             GuiButton btn = (GuiButton) buttonList.get(i);
-            if (btn != null && btn.func_146115_a() && btn.enabled) {
+            if (btn != null && btn.isMouseOver() && btn.enabled) {
 
                 if (btn instanceof GuideModSelectionButton) {
                     GuideModSelectionButton el = (GuideModSelectionButton) btn;
@@ -393,7 +394,7 @@ public class GuiGuideBase extends GuiScreen {
 
     }
 
-    public void keyTyped(char key, int keycode){
+    public void keyTyped(char key, int keycode) throws IOException{
         super.keyTyped(key, keycode);
 
         if(ObjectSearch != null && ObjectSearch.isFocused()){
@@ -509,7 +510,7 @@ public class GuiGuideBase extends GuiScreen {
         int sizeX = 130, sizeY = 12;
 
         if(ObjectSearch == null)
-        ObjectSearch = new GuiTextField(fontRendererObj, obSX, obSY, sizeX, sizeY);
+        ObjectSearch = new GuiTextField(1, fontRendererObj, obSX, obSY, sizeX, sizeY);
         else{
             ObjectSearch.xPosition = obSX;
             ObjectSearch.yPosition = obSY;

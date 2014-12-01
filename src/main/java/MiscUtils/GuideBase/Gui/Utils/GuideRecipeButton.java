@@ -27,7 +27,7 @@ public class GuideRecipeButton  extends GuiButton {
         GL11.glColor4f(1F, 1F, 1F, 1F);
 
         mc.getTextureManager().bindTexture(IconTexutre);
-        this.field_146123_n = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
+        this.hovered = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
         this.mouseDragged(mc, x, y);
 
         Color c = new Color(119, 119, 119);
@@ -44,7 +44,7 @@ public class GuideRecipeButton  extends GuiButton {
 
     }
 
-    public void func_146113_a(SoundHandler p_146113_1_)
+    public void playPressSound(SoundHandler p_146113_1_)
     {
     }
 

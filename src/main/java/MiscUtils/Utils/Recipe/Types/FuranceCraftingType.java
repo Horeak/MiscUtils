@@ -49,7 +49,7 @@ public class FuranceCraftingType extends GuideRecipeTypeRender {
 
         int j = 0;
 
-        Map<ItemStack, ItemStack> recipes = (Map<ItemStack, ItemStack>) FurnaceRecipes.smelting().getSmeltingList();
+        Map<ItemStack, ItemStack> recipes = (Map<ItemStack, ItemStack>) FurnaceRecipes.instance().getSmeltingList();
         for (Map.Entry<ItemStack, ItemStack> recipe : recipes.entrySet()) {
             if(StackUtils.AreStacksEqualIgnoreData(recipe.getValue(), stack)) {
                 if(j == At) {
@@ -75,7 +75,7 @@ public class FuranceCraftingType extends GuideRecipeTypeRender {
     public int GetRecipesAmountFor(ItemStack stack) {
         int num = 0;
 
-        Map<ItemStack, ItemStack> recipes = (Map<ItemStack, ItemStack>) FurnaceRecipes.smelting().getSmeltingList();
+        Map<ItemStack, ItemStack> recipes = (Map<ItemStack, ItemStack>) FurnaceRecipes.instance().getSmeltingList();
         for (Map.Entry<ItemStack, ItemStack> recipe : recipes.entrySet()) {
             if(StackUtils.AreStacksEqualIgnoreData(recipe.getValue(), stack)) {
                num += 1;
@@ -94,7 +94,7 @@ public class FuranceCraftingType extends GuideRecipeTypeRender {
 
         int h = 0;
         //Get the stack size of the output...
-        for(Object r : FurnaceRecipes.smelting().getSmeltingList().values()) {
+        for(Object r : FurnaceRecipes.instance().getSmeltingList().values()) {
             ItemStack sta = StackUtils.GetObject(r);
 
             if (StackUtils.AreStacksEqualIgnoreData(render, sta)) {

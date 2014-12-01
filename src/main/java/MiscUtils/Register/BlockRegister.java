@@ -1,10 +1,10 @@
 package MiscUtils.Register;
 
 import MiscUtils.Config.ConfigBase;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BlockRegister {
 
@@ -21,7 +21,7 @@ public class BlockRegister {
 
         if(config.IsBlockEnabled(block)){
 
-            block.setBlockName(Name.toLowerCase().replace(" ", "_"));
+            block.setUnlocalizedName(Name.toLowerCase().replace(" ", "_"));
             GameRegistry.registerBlock(block, Name.toLowerCase().replace(" ", "_"));
         }
     }
@@ -44,7 +44,7 @@ public class BlockRegister {
 
         if (config.IsBlockEnabled(Block)) {
 
-            Block.setBlockName(Name.toLowerCase().replace(" ", "_"));
+            Block.setUnlocalizedName(Name.toLowerCase().replace(" ", "_"));
             GameRegistry.registerBlock(Block, itemclass, Name.toLowerCase().replace(" ", "_"));
         }
     }
@@ -55,7 +55,7 @@ public class BlockRegister {
         config.BlockConfigNames.put(Block, Name);
 
         if(config.IsBlockEnabled(Block)){
-            Block.setBlockName(Name.toLowerCase().replace(" ", "_"));
+            Block.setUnlocalizedName(Name.toLowerCase().replace(" ", "_"));
             GameRegistry.registerBlock(Block, itemclass, Name.toLowerCase().replace(" ", "_"));
             GameRegistry.registerTileEntity(tileClass, "["+Id+"]" + Name);
         }

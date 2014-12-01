@@ -20,13 +20,13 @@ public class GuideObjectButton extends GuiButton {
     {
 
         GL11.glPushMatrix();
-        this.field_146123_n = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
+        this.hovered = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
 
 
         this.mouseDragged(mc, x, y);
         int mode = 0;
 
-        if (this.field_146123_n)
+        if (this.hovered)
         {
             mode = 1;
         }
@@ -42,7 +42,7 @@ public class GuideObjectButton extends GuiButton {
                 c = new Color(144, 144, 144);
             }
 
-            mc.fontRenderer.drawString(stack.getDisplayName(), xPosition, yPosition, c.getRGB(), false);
+            mc.fontRendererObj.drawString(stack.getDisplayName(), xPosition, yPosition, c.getRGB());
         }
         GL11.glPopMatrix();
     }

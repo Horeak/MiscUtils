@@ -1,10 +1,12 @@
 package MiscUtils.TileEntity;
 
+import MiscUtils.Handlers.ChatMessageHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.Constants;
 
 public class TileEntityInvBase  extends ModTileEntity implements IInventory{
@@ -16,33 +18,7 @@ public class TileEntityInvBase  extends ModTileEntity implements IInventory{
 	public int SlotSize;
 	
 	public NBTTagCompound nbt;
-	
-	
-	@Override
-	public String getInventoryName() {
-		return Name;
-	}
 
-
-
-	@Override
-	public boolean hasCustomInventoryName() {
-		return false;
-	}
-
-
-
-	@Override
-	public void openInventory() {
-		
-	}
-
-
-
-	@Override
-	public void closeInventory() {
-		
-	}
 	
 	public TileEntityInvBase(int Slots, String Name, int Size){
 		
@@ -111,20 +87,50 @@ public class TileEntityInvBase  extends ModTileEntity implements IInventory{
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-		return entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) <= 64;
+		return entityplayer.getDistanceSq(getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5) <= 64;
 	}
 
 
-	@Override
+
+    @Override
+    public void openInventory(EntityPlayer playerIn) {
+
+    }
+
+    @Override
+    public void closeInventory(EntityPlayer playerIn) {
+
+    }
+
+
+    @Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
 		return true;
 		
 	}
-	
-	
 
-        
-        @Override
+    @Override
+    public int getField(int id) {
+        return 0;
+    }
+
+    @Override
+    public void setField(int id, int value) {
+
+    }
+
+    @Override
+    public int getFieldCount() {
+        return 0;
+    }
+
+    @Override
+    public void clearInventory() {
+
+    }
+
+
+    @Override
     	public void writeToNBT(NBTTagCompound compound){
     		super.writeToNBT(compound);
     		
@@ -168,4 +174,14 @@ public class TileEntityInvBase  extends ModTileEntity implements IInventory{
     		
     		
     	}
+
+    @Override
+    public String getName() {
+        return Name;
+    }
+
+    @Override
+    public IChatComponent getDisplayName() {
+        return ChatMessageHandler.createChatComponent(Name);
+    }
 }

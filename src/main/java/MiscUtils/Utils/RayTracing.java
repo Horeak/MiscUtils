@@ -3,11 +3,11 @@ package MiscUtils.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -46,7 +46,7 @@ import java.util.Comparator;
                 return;
             }
 
-            EntityLivingBase viewpoint = mc.renderViewEntity;
+            Entity viewpoint = mc.pointedEntity;
             if (viewpoint == null) return;
 
             this.target      = this.rayTrace(viewpoint, mc.playerController.getBlockReachDistance() - 0.5, 0);
@@ -76,11 +76,13 @@ import java.util.Comparator;
             return this.targetEntity;
         }
 
-        public MovingObjectPosition rayTrace(EntityLivingBase entity, double par1, float par3)
+        public MovingObjectPosition rayTrace(Entity entity, double par1, float par3)
         {
-            Vec3 vec3     = entity.getPosition(par3);
+            BlockPos pos     = entity.getPosition();
+            Vec3 vec3 = new Vec3(pos.getX(), pos.getY(), pos.getZ());
+
             if (entity.getEyeHeight() != 0.12F)
-                vec3.yCoord  += entity.getEyeHeight();
+                pos.add(0, entity.getEyeHeight(), 0);
 
             Vec3 vec31 = entity.getLook(par3);
             Vec3 vec32 = vec3.addVector(vec31.xCoord * par1, vec31.yCoord * par1, vec31.zCoord * par1);
@@ -127,31 +129,25 @@ import java.util.Comparator;
             EntityPlayer player = mc.thePlayer;
             World world = mc.theWorld;
 
-            int x = this.target.blockX;
-            int y = this.target.blockY;
-            int z = this.target.blockZ;
+            int x = this.target.func_178782_a().getX();
+            int y = this.target.func_178782_a().getY();
+            int z = this.target.func_178782_a().getZ();
             //int   blockID         = world.getBlockId(x, y, z);
             //Block mouseoverBlock  = Block.blocksList[blockID];
-            Block mouseoverBlock  = world.getBlock(x, y, z);
-            TileEntity tileEntity = world.getTileEntity(x, y, z);
+            Block mouseoverBlock  = world.getBlockState(new BlockPos(x, y, z)).getBlock();
+            TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
             if (mouseoverBlock == null) return items;
 
 
             if(items.size() > 0)
                 return items;
 
-            if (world.getTileEntity(x, y, z) == null){
+            if (world.getTileEntity(new BlockPos(x, y, z)) == null){
                 try{
-                    ItemStack block = new ItemStack(mouseoverBlock, 1, world.getBlockMetadata(x, y, z));
-
-                    //System.out.printf("%s %s %s\n", block, block.getDisplayName(), block.getItemDamage());
+                    ItemStack block = new ItemStack(mouseoverBlock, 1, 0);
 
                     if (block.getItem() != null)
                         items.add(block);
-                    //else
-                    //	items.add(new ItemStack(new ItemBlock(mouseoverBlock)));
-                    //else
-                    //	items.add(new ItemStack(Item.getItemFromBlock(mouseoverBlock)));
 
 
                 } catch(Exception e){
@@ -162,7 +158,7 @@ import java.util.Comparator;
                 return items;
 
             try{
-                ItemStack pick = mouseoverBlock.getPickBlock(this.target, world, x, y, z);
+                ItemStack pick = mouseoverBlock.getPickBlock(this.target, world, new BlockPos(x, y, z));
                 if(pick != null)
                     items.add(pick);
             }catch(Exception e){}
@@ -184,14 +180,14 @@ import java.util.Comparator;
             if(mouseoverBlock instanceof IShearable)
             {
                 IShearable shearable = (IShearable)mouseoverBlock;
-                if(shearable.isShearable(new ItemStack(Items.shears), world, x, y, z))
+                if(shearable.isShearable(new ItemStack(Items.shears), world, new BlockPos(x, y, z)))
                 {
-                    items.addAll(shearable.onSheared(new ItemStack(Items.shears), world, x, y, z, 0));
+                    items.addAll(shearable.onSheared(new ItemStack(Items.shears), world, new BlockPos(x, y, z), 0));
                 }
             }
 
             if(items.size() == 0)
-                items.add(0, new ItemStack(mouseoverBlock, 1, world.getBlockMetadata(x, y, z)));
+                items.add(0, new ItemStack(mouseoverBlock, 1, 0));
 
             return items;
         }

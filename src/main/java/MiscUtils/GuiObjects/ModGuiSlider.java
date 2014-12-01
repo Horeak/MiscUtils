@@ -58,7 +58,7 @@ public class ModGuiSlider extends GuiButton {
 
 
         if(RenderLabel) {
-            drawCenteredString(mc.fontRenderer, label, xPosition + (xSize / 2), yPosition + (ySize / 4), 0xffffff);
+            drawCenteredString(mc.fontRendererObj, label, xPosition + (xSize / 2), yPosition + (ySize / 4), 0xffffff);
         }
 
         GL11.glPopMatrix();

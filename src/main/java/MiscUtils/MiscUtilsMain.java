@@ -12,18 +12,18 @@ import MiscUtils.Register.ItemRegister;
 import MiscUtils.Utils.CraftingUtils;
 import MiscUtils.Utils.PlayerTickHandler;
 import MiscUtils.Utils.Recipe.RecipeUtils;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 @Mod(modid = MiscUtilsMain.Id, name = MiscUtilsMain.Name, version = "@VERSION@")
 public class MiscUtilsMain
@@ -45,7 +45,7 @@ public class MiscUtilsMain
 
     public static boolean IsLoadedInDev = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 
-    public static Item Guide = new ItemGuide().setCreativeTab(CreativeTabs.tabMisc).setTextureName(Id + ":ItemGuide");
+    public static Item Guide = new ItemGuide().setCreativeTab(CreativeTabs.tabMisc).setUnlocalizedName("itemguide");
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
