@@ -1,7 +1,9 @@
 package MiscUtils.Utils;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -12,8 +14,8 @@ import java.util.Random;
 public class StackUtils
 {
 
-
     public static ItemStack GetObject(Object ob){
+
      if(ob == null)
          return null;
 
@@ -27,15 +29,24 @@ public class StackUtils
             return (ItemStack)ob;
 
         if(ob instanceof List){
-            if((List)ob != null && ((List)ob).size() > 0)
-            if(((List)ob).get(0) instanceof ItemStack){
-                return (ItemStack)((List)ob).get(0);
+            for(Object r : (List)ob){
+                if(r instanceof ItemStack){
+
+                    if(r instanceof Block)
+                        return new ItemStack((Block)r);
+
+                    if(r instanceof Item)
+                        return new ItemStack((Item)r);
+
+                    if(r instanceof ItemStack)
+                        return (ItemStack)r;
+
+                }
             }
         }
 
         if(ob instanceof String){
             ArrayList<ItemStack> stacks = OreDictionary.getOres((String) ob);
-
 
             if(stacks.size() > 0)
             return OreDictionary.getOres((String)ob).get(new Random().nextInt(stacks.size()));
@@ -46,7 +57,6 @@ public class StackUtils
 
 
     public static ItemStack[] GetMultiObject(Object... ob){
-
         ItemStack[] stacks = new ItemStack[ob.length];
 
         for(int i = 0; i < stacks.length; i++){
@@ -82,6 +92,19 @@ public class StackUtils
 
     public static boolean AreStacksEqual(ItemStack stack1, ItemStack stack2){
         return AreStacksEqual(stack1, stack2, false, false, false);
+    }
+
+    public static GameRegistry.UniqueIdentifier GetIdentifier(ItemStack stack){
+        GameRegistry.UniqueIdentifier id = null;
+
+        if(stack != null)
+        if(stack.getItem() instanceof ItemBlock){
+            id = GameRegistry.findUniqueIdentifierFor(Block.getBlockFromItem(stack.getItem()));
+        }else{
+            id = GameRegistry.findUniqueIdentifierFor(stack.getItem());
+        }
+
+        return id;
     }
 
 

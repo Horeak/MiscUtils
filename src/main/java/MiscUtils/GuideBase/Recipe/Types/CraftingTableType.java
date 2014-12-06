@@ -1,8 +1,10 @@
-package MiscUtils.Utils.Recipe.Types;
+package MiscUtils.GuideBase.Recipe.Types;
 
 import MiscUtils.GuideBase.Gui.Utils.GuideItem;
 import MiscUtils.GuideBase.Utils.GuideRecipeTypeRender;
 import MiscUtils.Utils.StackUtils;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -60,6 +62,7 @@ public class CraftingTableType extends GuideRecipeTypeRender{
                 if(StackUtils.AreStacksEqualIgnoreData(re.getRecipeOutput(), stack)){
 
                     if(j == at) {
+
 
                         if (re instanceof ShapelessRecipes) {
                             for (int i = 0; i < ((ShapelessRecipes) re).recipeItems.size(); i++) {
@@ -143,8 +146,14 @@ public class CraftingTableType extends GuideRecipeTypeRender{
        ItemStack[] stacks = GetRequiredItemsFor(stack, At);
         ItemStack render = stack.copy();
 
+        //TODO Fix shaped recipes not rendering in correct position some times (look a stick. (control + click the stick on the silver sword page to open))
         for(int y = 0; y < 3; y++){
             for(int x = 0; x < 3; x++){
+
+                if(stacks[x+y * 3] == null || stacks[x+y * 3].getItem() == Item.getItemFromBlock(Blocks.air))
+                    continue;
+
+
                 ListToAddTo.add(new GuideItem(0, PosX + 5 + (x * 18), PosY + 5 + (y * 18), stacks[x+y * 3]));
             }
         }

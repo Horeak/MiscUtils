@@ -1,4 +1,4 @@
-package MiscUtils.Utils.Recipe.Types;
+package MiscUtils.GuideBase.Recipe.Types;
 
 import MiscUtils.GuideBase.Gui.Utils.GuideItem;
 import MiscUtils.GuideBase.Utils.GuideRecipeTypeRender;

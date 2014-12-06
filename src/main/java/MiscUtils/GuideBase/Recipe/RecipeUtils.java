@@ -1,8 +1,8 @@
-package MiscUtils.Utils.Recipe;
+package MiscUtils.GuideBase.Recipe;
 
 import MiscUtils.GuideBase.Utils.GuideRecipeTypeRender;
-import MiscUtils.Utils.Recipe.Types.CraftingTableType;
-import MiscUtils.Utils.Recipe.Types.FuranceCraftingType;
+import MiscUtils.GuideBase.Recipe.Types.CraftingTableType;
+import MiscUtils.GuideBase.Recipe.Types.FuranceCraftingType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;

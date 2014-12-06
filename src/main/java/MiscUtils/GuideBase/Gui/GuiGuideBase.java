@@ -5,6 +5,7 @@ import MiscUtils.GuideBase.Gui.Utils.GuideModSelectionButton;
 import MiscUtils.GuideBase.Gui.Utils.GuideObjectButton;
 import MiscUtils.GuideBase.Gui.Utils.GuideRecipeButton;
 import MiscUtils.GuideBase.Gui.Utils.GuideTabSelectionButton;
+import MiscUtils.GuideBase.Recipe.RecipeUtils;
 import MiscUtils.GuideBase.Registry.GuideModRegistry;
 import MiscUtils.GuideBase.Utils.GuideInstance;
 import MiscUtils.GuideBase.Utils.GuideRecipeTypeRender;
@@ -12,7 +13,6 @@ import MiscUtils.GuideBase.Utils.GuideTab;
 import MiscUtils.GuideBase.Utils.ModGuideInstance;
 import MiscUtils.GuideBase.Utils.TextGuideTab;
 import MiscUtils.MiscUtilsMain;
-import MiscUtils.Utils.Recipe.RecipeUtils;
 import MiscUtils.Utils.StackUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -23,6 +23,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -36,15 +37,17 @@ public class GuiGuideBase extends GuiScreen {
     public ResourceLocation MainTexture = new ResourceLocation(MiscUtilsMain.Id.toLowerCase(), "textures/gui/GuideGui.png");
     public ResourceLocation IconTexutre = new ResourceLocation(MiscUtilsMain.Id.toLowerCase(), "textures/gui/GuideGuiIcons.png");
 
+    public ArrayList<ItemStack> InfoList = new ArrayList<ItemStack>();
+
     public GuideTab currentTab = null;
 
-    public double InfoScroll = 0;
+    public float InfoScroll = 0;
     public boolean InfoScrolling;
 
     public boolean Update = true;
     public boolean CanScrollText = false;
 
-    public boolean ShowingObject = false;
+    public boolean ShowingObject = false, UnRegisteredItem = false;
     public ItemStack ObjectShowing = null;
 
     public boolean ShowingRecipe = false;
@@ -53,12 +56,9 @@ public class GuiGuideBase extends GuiScreen {
     public GuideRecipeTypeRender res;
 
     public boolean SearchBar = false;
-
     public GuiTextField ObjectSearch;
 
     int xSizeOfTexture = 255, ySizeOfTexture = 208;
-    double ScrollMax = 4.825;
-    float ScrollOffset = 5.175F;
 
 
     ModGuideInstance Current = null;
@@ -126,14 +126,16 @@ public class GuiGuideBase extends GuiScreen {
 
         //Get scroll bar value
         if(CanScrollText){
-            float t = MathHelper.clamp_float(((float) y - (float) posY + (float) 201) / 40, 0.0F, 10F);
+            float t = MathHelper.clamp_float((float)((y-5)-posY) / 190, 0.0F, 1F);
             boolean isOnInfoScroll = y >= posY + 6 && y < posY + 200;
             boolean flag = Mouse.isButtonDown(0);
+
+
             if (!flag) {
                 InfoScrolling = false;
 
             } else if (InfoScrolling && isOnInfoScroll) {
-                InfoScroll = t - ScrollOffset;
+                InfoScroll = t;
 
             }
 
@@ -151,8 +153,7 @@ public class GuiGuideBase extends GuiScreen {
             GL11.glPushMatrix();
             GL11.glColor4f(1F, 1F, 1F, 1F);
             Minecraft.getMinecraft().renderEngine.bindTexture(IconTexutre);
-            GL11.glTranslatef(0.0F, (float)(InfoScroll * 36.9F), 0.0F);
-            drawTexturedModalRect(posX + 214, posY + 7, 32, 0, 12, 15);
+            drawTexturedModalRect(posX + 214, (int)(posY + 7 +(InfoScroll * (178))), 32, 0, 12, 15);
             GL11.glPopMatrix();
         }
 
@@ -172,11 +173,9 @@ public class GuiGuideBase extends GuiScreen {
                 lines = list.size();
 
                 int PerPage = 18;
-                double trans = (lines) / (ScrollMax);
 
-                double transs = (trans * InfoScroll);
-                int trant = (int) transs;
-
+                float trantt = ((float)(lines-PerPage) * InfoScroll);
+                int trant = (int)trantt;
 
                 int lineMax = trant + PerPage;
                 int lineMin = trant;
@@ -206,6 +205,8 @@ public class GuiGuideBase extends GuiScreen {
 
         if (ShowingObject && ObjectShowing != null){
             fontRendererObj.drawString(ObjectShowing.getDisplayName(), posX + textX, posY + 4, new Color(91, 91, 91).getRGB(), false);
+            fontRendererObj.drawString(EnumChatFormatting.BLUE + "" + EnumChatFormatting.ITALIC + "Mod: " + StackUtils.GetIdentifier(ObjectShowing).modId, posX + 34, posY + 12, 0xffffff);
+
             String Text = currentTab.GetInfoForStack(ObjectShowing);
 
             int xx = posX + 188;
@@ -262,42 +263,50 @@ public class GuiGuideBase extends GuiScreen {
 
             }
 
+            if(HasPage(ObjectShowing) || MiscUtilsMain.IsLoadedInDev) {
+                if (Text != null && !Text.isEmpty()) {
+                    ArrayList list = new ArrayList<String>();
 
-
-
-            if(Text != null && !Text.isEmpty()) {
-                java.util.List list = fontRendererObj.listFormattedStringToWidth(Text, TextLength);
-                int lines = list.size();
-
-                int PerPage = 16 - (Offset / 10);
-                double trans = (lines) / (ScrollMax);
-
-                //TODO Redo to properly scale it. The end of the list should always be at the bottom of the page when scrolled all the way down!!!
-                double transs = (trans * InfoScroll);
-                int trant = (int) transs;
-
-
-                int lineMax = trant + PerPage;
-                int lineMin = trant;
-
-                if (lineMax > lines)
-                    lineMax = lines;
-
-
-                if (lineMax > 0 && lineMin >= 0)
-                    for (int line = lineMin; line < lineMax; line++) {
-
-                        if (list.size() > line)
-                            fontRendererObj.drawString((String) list.get(line), posX + textX, ((posY + textY + 20 + ((line - lineMin) * 10))), new Color(107, 107, 107).getRGB(), false);
-
+                    if(MiscUtilsMain.IsLoadedInDev && !HasPage(ObjectShowing)){
+                        list.add(EnumChatFormatting.BOLD + "" + EnumChatFormatting.UNDERLINE + "Page was loaded in dev!");
+                        list.add("");
                     }
 
-                if (lines > PerPage)
-                    CanScrollText = true;
-                else
-                    CanScrollText = false;
+                    for(Object r : fontRendererObj.listFormattedStringToWidth(Text, TextLength)){
+                        String te = (String)r;
+                        list.add(te);
+                    }
+
+                    int lines = list.size();
+
+                    int PerPage = 16 - (Offset / 10);
+
+                    float transs = ((float) (lines - PerPage) * InfoScroll);
+                    int trant = (int) transs;
 
 
+                    int lineMax = trant + PerPage;
+                    int lineMin = trant;
+
+                    if (lineMax > lines)
+                        lineMax = lines;
+
+
+                    if (lineMax > 0 && lineMin >= 0)
+                        for (int line = lineMin; line < lineMax; line++) {
+
+                            if (list.size() > line)
+                                fontRendererObj.drawString((String) list.get(line), posX + textX, ((posY + textY + 20 + ((line - lineMin) * 10))), new Color(107, 107, 107).getRGB(), false);
+
+                        }
+
+                    if (lines > PerPage)
+                        CanScrollText = true;
+                    else
+                        CanScrollText = false;
+
+
+                }
             }
         }else{
 
@@ -401,6 +410,18 @@ public class GuiGuideBase extends GuiScreen {
         }
 
 
+        int Pos = InfoList.size() - 1;
+        if(ShowingObject) {
+            if(keycode == Keyboard.KEY_BACK){
+                if(InfoList.size() > 0){
+                    SetPageFromStack(InfoList.get(Pos), false);
+                    InfoList.remove(InfoList.get(Pos));
+                }else{
+                    ResetObjectPageInfo();
+                    InfoList.clear();
+                }
+            }
+        }
 
       }
 
@@ -413,12 +434,14 @@ public class GuiGuideBase extends GuiScreen {
             currentTab = null;
 
             ResetObjectPageInfo();
+            InfoList.clear();
         }
 
         if(button instanceof GuideTabSelectionButton) {
             currentTab = ((GuideTabSelectionButton) button).GetInstance();
 
             ResetObjectPageInfo();
+            InfoList.clear();
 
         }
 
@@ -427,6 +450,10 @@ public class GuiGuideBase extends GuiScreen {
 
             ObjectShowing = ((GuideObjectButton) button).stack;
             ShowingObject = true;
+
+            InfoList.clear();
+            InfoList.add(ObjectShowing);
+
         }
 
         if(button instanceof GuideRecipeButton){
@@ -461,34 +488,21 @@ public class GuiGuideBase extends GuiScreen {
 
             //Remove for loops to allow items that are not registered to be able to be viewed.
             //TODO Allow accessing pages that are not registered? have them show the recipe and a blank page? only allow items that have a recipe?
+            //TODO Make control click default or dev only?
 
-            if(!StackUtils.AreStacksEqualIgnoreData(ObjectShowing, gd.stack)){
-                for(ModGuideInstance inst : GuideModRegistry.ModArray){
-                    for(GuideTab tab : inst.guide.GuideTabs){
-                        for(Object r : tab.list){
-                            ItemStack stack = StackUtils.GetObject(r);
+            boolean DebugAllItemsAccess = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
+            ItemStack stack = gd.stack;
 
-                            if(StackUtils.AreStacksEqualIgnoreData(stack, gd.stack)){
-                                ResetObjectPageInfo();
+            if(stack != null) {
+                ItemStack ccp = stack.copy();
+                ccp.setItemDamage(0);
 
-                                ItemStack ccp = gd.stack.copy();
+                SetPageFromStack(ccp, !DebugAllItemsAccess);
+                InfoList.add(ccp);
 
-                                ccp.setItemDamage(0);
 
-                                ObjectShowing = ccp;
-                                ShowingObject = true;
-
-                                if(!tab.Name.equalsIgnoreCase(currentTab.Name))
-                                    currentTab = tab;
-
-                                if(!Current.Id.equalsIgnoreCase(inst.Id))
-                                    Current = inst;
-                            }
-
-                        }
-                    }
-                }
             }
+
         }
 
 
@@ -570,9 +584,7 @@ public class GuiGuideBase extends GuiScreen {
                 else
                     CanScrollText = false;
 
-
-              //TODO Redo to properly scale it. The end of the list should always be at the bottom of the page when scrolled all the way down!!!
-                double transs = (m * (InfoScroll / ScrollMax));
+                float transs = ((float)(m-PerPage) * (InfoScroll));
                 int trant = (int) transs;
 
 
@@ -655,6 +667,62 @@ public class GuiGuideBase extends GuiScreen {
 
         ObjectSearch.setText("");
 
+    }
+
+    public void SetPageFromStack(ItemStack stack, boolean Restricated) {
+        if (Restricated) {
+            for (ModGuideInstance inst : GuideModRegistry.ModArray) {
+                for (GuideTab tab : inst.guide.GuideTabs) {
+                    for (Object r : tab.list) {
+                        ItemStack st = StackUtils.GetObject(r);
+
+                        if (StackUtils.AreStacksEqualIgnoreData(st, stack)) {
+                            ResetObjectPageInfo();
+
+                            ItemStack ccp = stack.copy();
+                            ccp.setItemDamage(0);
+
+                            ObjectShowing = ccp;
+                            ShowingObject = true;
+
+                            UnRegisteredItem = !HasPage(ccp);
+
+                            if (!tab.Name.equalsIgnoreCase(currentTab.Name))
+                                currentTab = tab;
+
+                            if (!Current.Id.equalsIgnoreCase(inst.Id))
+                                Current = inst;
+                        }
+
+                    }
+                }
+            }
+
+        } else {
+            ResetObjectPageInfo();
+            ItemStack ccp = stack.copy();
+            ccp.setItemDamage(0);
+
+            ObjectShowing = ccp;
+            ShowingObject = true;
+
+            UnRegisteredItem = !HasPage(ccp);
+        }
+
+    }
+
+    public boolean HasPage(ItemStack stack){
+        for (ModGuideInstance inst : GuideModRegistry.ModArray) {
+            for (GuideTab tab : inst.guide.GuideTabs) {
+                for (Object r : tab.list) {
+                    ItemStack st = StackUtils.GetObject(r);
+                    if (StackUtils.AreStacksEqualIgnoreData(st, stack)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }

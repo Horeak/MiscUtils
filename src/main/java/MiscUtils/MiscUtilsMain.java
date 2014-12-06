@@ -11,7 +11,7 @@ import MiscUtils.Register.BlockRegister;
 import MiscUtils.Register.ItemRegister;
 import MiscUtils.Utils.CraftingUtils;
 import MiscUtils.Utils.PlayerTickHandler;
-import MiscUtils.Utils.Recipe.RecipeUtils;
+import MiscUtils.GuideBase.Recipe.RecipeUtils;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
