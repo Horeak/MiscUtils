@@ -1,5 +1,6 @@
 package MiscUtils.GuideBase.Utils;
 
+import MiscUtils.Utils.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -26,6 +27,12 @@ public abstract class GuideInstance {
 
     public void RegisterTab(GuideTab tab){
         GuideTabs.add(tab);
+
+        for (Object r : tab.list) {
+            ItemStack st = StackUtils.GetObject(r);
+            tab.InitiateInfo(st);
+        }
+
 
     }
 

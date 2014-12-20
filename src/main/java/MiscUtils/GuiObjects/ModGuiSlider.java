@@ -13,7 +13,6 @@ public class ModGuiSlider extends GuiButton {
     public int xSize, ySize;
     public boolean RenderTab = true, RenderBackground = true, RenderLabel = true;
 
-    //TODO Improve class inorder to make it easier to implement. For example with custom render instead of the normal render
     public ModGuiSlider(int id, int x, int y, int xSize, int ySize, String label) {
         super(id, x, y, xSize, ySize, label);
 
@@ -30,7 +29,6 @@ public class ModGuiSlider extends GuiButton {
 
             if (Mouse.isButtonDown(0)) {
                 if(mouseX >= xPosition && mouseX < xPosition + xSize && mouseY >= yPosition && mouseY < yPosition + ySize) {
-                    //TODO Make it work correctly with the correct xSize and prevent it from going outside of its own size
                     sliderValue = MathHelper.clamp_float((float)(mouseX - (xPosition)) / (float)(width - 6), 0F, 1F);
                 }
             }

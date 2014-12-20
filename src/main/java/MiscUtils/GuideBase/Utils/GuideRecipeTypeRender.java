@@ -26,7 +26,6 @@ public abstract class GuideRecipeTypeRender {
 
     public void RenderExtras(GuiScreen gui, int posX, int posY, ItemStack stack, int at){}
 
-    //TODO Somehow make a default way of getting the stack size of the recipe output
     public abstract ArrayList<GuideItem> AddItemsFor(int PosX, int PosY, ArrayList<GuideItem> ListToAddTo, ItemStack stack, int At);
 
 }

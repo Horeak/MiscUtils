@@ -44,7 +44,6 @@ public class GuiGuideBase extends GuiScreen {
     public float InfoScroll = 0;
     public boolean InfoScrolling;
 
-    public boolean Update = true;
     public boolean CanScrollText = false;
 
     public boolean ShowingObject = false, UnRegisteredItem = false;
@@ -59,6 +58,8 @@ public class GuiGuideBase extends GuiScreen {
     public GuiTextField ObjectSearch;
 
     int xSizeOfTexture = 255, ySizeOfTexture = 208;
+
+    String ObjectTextForRender = null;
 
 
     ModGuideInstance Current = null;
@@ -97,13 +98,6 @@ public class GuiGuideBase extends GuiScreen {
         //No GuideTab use default
         if(Current != null && currentTab == null && Current.guide.GuideTabs.size() > 0)
             currentTab = Current.guide.GuideTabs.get(0);
-
-
-        //Should tab contents be updated each time it renders?
-        if(Update) {
-            Current.guide.GuideTabs.clear();
-            Current.guide.RegisterInfo();
-        }
 
         //Resets scroll when off
         if(!CanScrollText){
@@ -161,6 +155,7 @@ public class GuiGuideBase extends GuiScreen {
 
         int textX = 34, textY = 16;
 
+
         //Render text pages
         if(!ShowingObject) {
             fontRendererObj.drawString(EnumChatFormatting.UNDERLINE + StatCollector.translateToLocal(Current.Id) + ": " + StatCollector.translateToLocal(currentTab.Name), posX + textX, posY + 4, new Color(91, 91, 91).getRGB(), false);
@@ -207,7 +202,11 @@ public class GuiGuideBase extends GuiScreen {
             fontRendererObj.drawString(ObjectShowing.getDisplayName(), posX + textX, posY + 4, new Color(91, 91, 91).getRGB(), false);
             fontRendererObj.drawString(EnumChatFormatting.BLUE + "" + EnumChatFormatting.ITALIC + "Mod: " + StackUtils.GetIdentifier(ObjectShowing).modId, posX + 34, posY + 12, 0xffffff);
 
-            String Text = currentTab.GetInfoForStack(ObjectShowing);
+            if(ObjectTextForRender == null){
+                ObjectTextForRender = currentTab.GetInfoForStack(ObjectShowing);
+            }
+
+            String Text = ObjectTextForRender;
 
             int xx = posX + 188;
             int yy = posY + 10;
@@ -314,6 +313,7 @@ public class GuiGuideBase extends GuiScreen {
             GL11.glColor4f(1F, 1F, 1F, 1F);
             super.drawScreen(x, y, f);
         }
+
 
 
 
@@ -542,6 +542,13 @@ public class GuiGuideBase extends GuiScreen {
             for(int i = 0; i < Current.guide.GuideTabs.size(); i++){
                 GuideTab instance = Current.guide.GuideTabs.get(i);
 
+                if(instance == null || instance.stack == null){
+                        Current.guide.GuideTabs.clear();
+                        Current.guide.RegisterInfo();
+
+                    return;
+                }
+
                 buttonList.add(new GuideTabSelectionButton(0, posX + 233, (posY + 3) + (i * 27), instance, currentTab != null ? currentTab.Name.equalsIgnoreCase(instance.Name) : false));
             }
 
@@ -665,6 +672,8 @@ public class GuiGuideBase extends GuiScreen {
 
         SearchBar = false;
 
+        ObjectTextForRender = null;
+
         ObjectSearch.setText("");
 
     }
@@ -684,6 +693,8 @@ public class GuiGuideBase extends GuiScreen {
 
                             ObjectShowing = ccp;
                             ShowingObject = true;
+
+                            ObjectTextForRender = null;
 
                             UnRegisteredItem = !HasPage(ccp);
 
@@ -707,6 +718,8 @@ public class GuiGuideBase extends GuiScreen {
             ShowingObject = true;
 
             UnRegisteredItem = !HasPage(ccp);
+
+            ObjectTextForRender = null;
         }
 
     }

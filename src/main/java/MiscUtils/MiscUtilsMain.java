@@ -4,6 +4,7 @@ import MiscUtils.Config.MiscUtilsConfig;
 import MiscUtils.GuideBase.Gui.GuiHandler;
 import MiscUtils.GuideBase.ItemGuide;
 import MiscUtils.GuideBase.MiscUtilsGuideInstance;
+import MiscUtils.GuideBase.Recipe.RecipeUtils;
 import MiscUtils.GuideBase.Registry.GuideModRegistry;
 import MiscUtils.Network.ChannelUtils;
 import MiscUtils.Proxies.ServerProxy;
@@ -11,7 +12,6 @@ import MiscUtils.Register.BlockRegister;
 import MiscUtils.Register.ItemRegister;
 import MiscUtils.Utils.CraftingUtils;
 import MiscUtils.Utils.PlayerTickHandler;
-import MiscUtils.GuideBase.Recipe.RecipeUtils;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -69,15 +69,14 @@ public class MiscUtilsMain
 
         CraftingUtils.AddShapelessRecipe(new ItemStack(Guide), new Object[]{Items.book, Items.dye, Items.paper});
 
-
         RecipeUtils.RegisterTypes();
+
+
 
     }
 
     @Mod.EventHandler
     public void Init(FMLInitializationEvent event){
-
-
         FMLCommonHandler.instance().bus().register(new PlayerTickHandler());
     }
 
@@ -86,7 +85,6 @@ public class MiscUtilsMain
     @Mod.EventHandler
     public void PostInit(FMLPostInitializationEvent event)
     {
-
     }
 
 

@@ -41,9 +41,6 @@ public class MiscUtilsGuideInstance extends GuideInstance {
     public void RegisterInfo() {
         MainTab = new ModGuideText(this, Items.paper, "guide.mod.tab.main");
 
-
-
-
         RegisterTab(MainTab);
     }
 }
