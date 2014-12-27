@@ -1,6 +1,5 @@
 package MiscUtils.Render;
 
-import MiscUtils.Utils.RayTracing;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -27,15 +26,13 @@ public class RenderHelper {
 
 
 
-    public static void RenderInfoTagOverTileEntity(TileEntity tile, ArrayList<String> InfoStrings, double x, double y, double z){
-        MovingObjectPosition mop = RayTracing.instance().getTarget();
+    public static void RenderInfoTagOverTileEntity(TileEntity tile, ArrayList<String> InfoStrings, double x, double y, double z) {
+        MovingObjectPosition mop = Minecraft.getMinecraft().objectMouseOver;
         RenderManager manager = Minecraft.getMinecraft().getRenderManager();
 
 
-
-
-        if(mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
-            if (mop.func_178782_a().getX() == tile.getPos().getX() && mop.func_178782_a().getY() == tile.getPos().getX() && mop.func_178782_a().getZ() == tile.getPos().getZ()) {
+        if (mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+            if (mop.func_178782_a().getX() == tile.getPos().getX() && mop.func_178782_a().getY() == tile.getPos().getY() && mop.func_178782_a().getZ() == tile.getPos().getZ()) {
 
                 EnumFacing sideHit = EnumFacing.getFront(mop.field_178784_b.getIndex());
 
@@ -57,7 +54,7 @@ public class RenderHelper {
                 double g = (block.getBlockBoundsMaxY() - block.getBlockBoundsMinY()) * 1.2;
 
                 GL11.glPushMatrix();
-                GL11.glTranslatef((float) x + 0.5F + xOffset, (float) y + (InfoStrings.size() * 0.21F) + yOffset + ((float)g / 2), (float) z + 0.5F + zOffset);
+                GL11.glTranslatef((float) x + 0.5F + xOffset, (float) y + (InfoStrings.size() * 0.21F) + yOffset + ((float) g / 2), (float) z + 0.5F + zOffset);
                 GL11.glNormal3f(0.0F, 1.0F, 0.0F);
                 GL11.glRotatef(-manager.playerViewY, 0.0F, 1.0F, 0.0F);
                 GL11.glRotatef(manager.playerViewX, 1.0F, 0.0F, 0.0F);
@@ -107,6 +104,7 @@ public class RenderHelper {
                 GL11.glPopMatrix();
 
             }
+        }
     }
 
     public static void drawTexturedModalRect(int p_73729_1_, int p_73729_2_, int p_73729_3_, int p_73729_4_, int p_73729_5_, int p_73729_6_, int zLevel)
@@ -132,7 +130,7 @@ public class RenderHelper {
 
         if(!(stack.getItem() instanceof ItemBlock)){
             GL11.glPushMatrix();
-
+            GL11.glColor4f(1F, 1F, 1F, 1F);
 
 
             itemRender.func_180450_b(stack, x, y);

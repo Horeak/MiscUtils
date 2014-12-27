@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.Constants;
 
-public class TileEntityInvBase  extends ModTileEntity implements IInventory{
+public abstract class TileEntityInvBase  extends ModTileEntity implements IInventory{
 
 
 

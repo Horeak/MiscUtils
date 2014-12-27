@@ -10,14 +10,12 @@ import MiscUtils.Proxies.ServerProxy;
 import MiscUtils.Register.BlockRegister;
 import MiscUtils.Register.ItemRegister;
 import MiscUtils.Utils.CraftingUtils;
-import MiscUtils.Utils.PlayerTickHandler;
 import MiscUtils.Utils.Recipe.RecipeUtils;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -78,11 +76,7 @@ public class MiscUtilsMain
     @Mod.EventHandler
     public void Init(FMLInitializationEvent event){
             ItemUtils.RegisterIcons();
-            BlockUtils.RegisterIcons();
 
-
-
-        FMLCommonHandler.instance().bus().register(new PlayerTickHandler());
     }
 
 

@@ -1,7 +1,6 @@
 package MiscUtils.Render;
 
 import MiscUtils.TileEntity.IBlockInfo;
-import MiscUtils.Utils.RayTracing;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -15,31 +14,34 @@ import java.util.ArrayList;
 
 public abstract class TileEntityBlockInfoRender extends TileEntitySpecialRenderer {
     @Override
-    public void renderTileEntityAt(TileEntity te, double xx, double yy, double zz, float p_147500_8_, int t) {
+    public void renderTileEntityAt(TileEntity te, double xx, double yy, double zz, float scale, int f) {
 
 
-        if(FMLCommonHandler.instance().getSide() == Side.CLIENT)
-            if(RayTracing.instance().getTarget() != null)
-                if(RayTracing.instance().getTarget().typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+            MovingObjectPosition obj = Minecraft.getMinecraft().objectMouseOver;
 
-                    int x = RayTracing.instance().getTarget().func_178782_a().getX();
-                    int y = RayTracing.instance().getTarget().func_178782_a().getY();
-                    int z = RayTracing.instance().getTarget().func_178782_a().getZ();
+            if (obj != null && obj.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK &&obj.func_178782_a() != null)
+            {
+                    int x = obj.func_178782_a().getX();
+                    int y = obj.func_178782_a().getY();
+                    int z = obj.func_178782_a().getZ();
 
                     World world = Minecraft.getMinecraft().thePlayer.getEntityWorld();
 
-                    if(te.getPos().getX() == x && te.getPos().getY() == y && te.getPos().getZ() == z)
-                    if(world.getTileEntity(new BlockPos(x,y,z)) instanceof IBlockInfo) {
-                        TileEntity tile = world.getTileEntity(new BlockPos(x,y,z));
-                        IBlockInfo info = (IBlockInfo)tile;
+                    if (te.getPos().getX() == x && te.getPos().getY() == y && te.getPos().getZ() == z)
+                        if (world.getTileEntity(new BlockPos(x, y, z)) instanceof IBlockInfo) {
+                            TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+                            IBlockInfo info = (IBlockInfo) tile;
 
 
-                        ArrayList<String> Strings = new ArrayList<String>();
-                        info.Info(Strings);
+                            ArrayList<String> Strings = new ArrayList<String>();
+                            info.Info(Strings);
 
-                        RenderHelper.RenderInfoTagOverTileEntity(tile, Strings, xx, yy, zz);
-                    }
+                            RenderHelper.RenderInfoTagOverTileEntity(tile, Strings, xx, yy, zz);
+                        }
                 }
+            }
+
     }
 
 }
