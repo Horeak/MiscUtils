@@ -39,6 +39,7 @@ minecraft {
     replaceIn "MiscUtils.java"
     replace "@VERSION@", config.mod_version
 }
+
   version = "${config.minecraft_version}-${config.mod_version}"
 
 

@@ -36,6 +36,7 @@ public abstract class TileEntityBlockInfoRender extends TileEntitySpecialRendere
                         ArrayList<String> Strings = new ArrayList<String>();
                         info.Info(Strings);
 
+                        if(Strings.size() > 0)
                         RenderHelper.RenderInfoTagOverTileEntity(tile, Strings, xx, yy, zz);
                     }
                 }
