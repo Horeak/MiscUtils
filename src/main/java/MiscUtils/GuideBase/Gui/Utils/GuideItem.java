@@ -1,5 +1,6 @@
 package MiscUtils.GuideBase.Gui.Utils;
 
+import MiscUtils.Render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
@@ -24,7 +25,7 @@ public class GuideItem extends GuiButton {
         GL11.glPushMatrix();
 
         if(stack != null)
-            MiscUtils.Render.RenderHelper.drawItemStack(mc.fontRenderer, stack, xPosition, yPosition);
+            RenderHelper.drawItemStack(mc.fontRenderer, stack, xPosition, yPosition);
 
 
         GL11.glPopMatrix();

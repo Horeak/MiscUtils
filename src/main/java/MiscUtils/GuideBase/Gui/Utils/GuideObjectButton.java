@@ -10,6 +10,8 @@ import java.awt.*;
 public class GuideObjectButton extends GuiButton {
     public ItemStack stack = null;
 
+
+    //TODO Change ItemStack to Object to allow usage for text-only pages
     public GuideObjectButton(int p_i1020_1_, int p_i1020_2_, int p_i1020_3_, ItemStack gd) {
         super(p_i1020_1_, p_i1020_2_, p_i1020_3_, gd.getDisplayName().length() * 5, 8, "");
         stack = gd;

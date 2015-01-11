@@ -13,6 +13,7 @@ import MiscUtils.GuideBase.Utils.GuideTab;
 import MiscUtils.GuideBase.Utils.ModGuideInstance;
 import MiscUtils.GuideBase.Utils.TextGuideTab;
 import MiscUtils.MiscUtilsMain;
+import MiscUtils.Render.RenderHelper;
 import MiscUtils.Utils.StackUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -57,12 +58,14 @@ public class GuiGuideBase extends GuiScreen {
     public boolean SearchBar = false;
     public GuiTextField ObjectSearch;
 
-    int xSizeOfTexture = 255, ySizeOfTexture = 208;
+    public int xSizeOfTexture = 255, ySizeOfTexture = 208;
 
-    String ObjectTextForRender = null;
+    public String ObjectTextForRender = null;
 
+    public ModGuideInstance Current = null;
 
-    ModGuideInstance Current = null;
+    //TODO Make pages and tabs work as instances of an abstract instead of having it how it is now. And make GuideInstance register a page instance where then the contents of the page is registered to that instance
+
 
 
     protected void mouseClicked(int x, int y, int g)
@@ -156,6 +159,7 @@ public class GuiGuideBase extends GuiScreen {
         int textX = 34, textY = 16;
 
 
+        //TODO Make pages pages work as modules and do rendering for each instance
         //Render text pages
         if(!ShowingObject) {
             fontRendererObj.drawString(EnumChatFormatting.UNDERLINE + StatCollector.translateToLocal(Current.Id) + ": " + StatCollector.translateToLocal(currentTab.Name), posX + textX, posY + 4, new Color(91, 91, 91).getRGB(), false);
@@ -198,6 +202,7 @@ public class GuiGuideBase extends GuiScreen {
         }
 
 
+        //TODO Make pages pages work as modules and do rendering for each instance
         if (ShowingObject && ObjectShowing != null){
             fontRendererObj.drawString(ObjectShowing.getDisplayName(), posX + textX, posY + 4, new Color(91, 91, 91).getRGB(), false);
             fontRendererObj.drawString(EnumChatFormatting.BLUE + "" + EnumChatFormatting.ITALIC + "Mod: " + StackUtils.GetIdentifier(ObjectShowing).modId, posX + 34, posY + 12, 0xffffff);
@@ -219,7 +224,7 @@ public class GuiGuideBase extends GuiScreen {
             drawRect(xx, yy, xx + 16, yy + 16, c1.getRGB());
 
             //Render item when showing a item page
-            MiscUtils.Render.RenderHelper.drawItemStack(fontRendererObj, ObjectShowing, xx, yy);
+            RenderHelper.drawItemStack(fontRendererObj, ObjectShowing, xx, yy);
 
 
             int Offset = 0;
@@ -262,6 +267,7 @@ public class GuiGuideBase extends GuiScreen {
 
             }
 
+            //TODO Make pages pages work as modules and do rendering for each instance
             if(HasPage(ObjectShowing) || MiscUtilsMain.IsLoadedInDev) {
                 if (Text != null && !Text.isEmpty()) {
                     ArrayList list = new ArrayList<String>();
@@ -565,7 +571,7 @@ public class GuiGuideBase extends GuiScreen {
         ArrayList copy = new ArrayList();
 
 
-
+        //TODO Make tabs work as modules and do rendering for each instance
         //Add ObjectButtons based on scroll
           if (!ShowingObject && currentTab != null && !(currentTab instanceof TextGuideTab)) {
 

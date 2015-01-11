@@ -8,7 +8,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
 public abstract class ModBlockCustomModel extends ModBlockContainer {
-    protected ModBlockCustomModel(Material p_i45394_1_) {
+    public ModBlockCustomModel(Material p_i45394_1_) {
         super(p_i45394_1_);
         setBlockTextureName("stone");
     }

@@ -2,6 +2,7 @@ package MiscUtils.GuideBase.Gui.Utils;
 
 import MiscUtils.GuideBase.Utils.GuideTab;
 import MiscUtils.MiscUtilsMain;
+import MiscUtils.Render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -64,7 +65,7 @@ public class GuideTabSelectionButton extends GuiButton {
 
 
         if(instance.stack != null)
-                MiscUtils.Render.RenderHelper.drawItemStack(mc.fontRenderer, instance.stack, xx + 7, yy + 5);
+                RenderHelper.drawItemStack(mc.fontRenderer, instance.stack, xx + 7, yy + 5);
 
         GL11.glPopMatrix();
     }
