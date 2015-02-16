@@ -53,8 +53,15 @@ public class GuideTab {
             GameRegistry.UniqueIdentifier id = StackUtils.GetIdentifier(stack);
 
             if(id != null) {
+                File fe = null;
+
             try {
-                File fe = new File(StringTranslate.class.getResource("/assets/" + (!Item ? instance.BlockDescriptions().getResourceDomain() : instance.ItemDescriptions().getResourceDomain()) + "/" + (!Item ? instance.BlockDescriptions().getResourcePath() : instance.ItemDescriptions().getResourcePath())).toURI().getPath());
+                fe = new File(StringTranslate.class.getResource("/assets/" + (!Item ? instance.BlockDescriptions().getResourceDomain() : instance.ItemDescriptions().getResourceDomain()) + "/" + (!Item ? instance.BlockDescriptions().getResourcePath() : instance.ItemDescriptions().getResourcePath())).toURI().getPath());
+
+               if(!fe.exists())
+                   return;
+
+
                 InputStream inputstream = new FileInputStream(fe);
 
                 if(inputstream != null) {

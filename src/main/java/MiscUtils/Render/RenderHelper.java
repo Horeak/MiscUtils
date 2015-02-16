@@ -28,11 +28,17 @@ public class RenderHelper {
     public static RenderItem itemRender = new RenderItem();
 
 
+    @Deprecated
+    public static void lightningFix(){
+        int bright = 0xF0;
+        int brightX = bright % 65536;
+        int brightY = bright / 65536;
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
+    }
+
     public static void RenderInfoTagOverTileEntity(TileEntity tile, ArrayList<String> InfoStrings, double x, double y, double z){
         MovingObjectPosition mop = RayTracing.instance().getTarget();
         RenderManager manager = RenderManager.instance;
-
-
 
 
         if(mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
