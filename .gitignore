@@ -24,6 +24,6 @@
 /*.ipr
 /*.iws
 /atlassian-ide-plugin.xml
+/.iml
 
 /.git
-*.db

@@ -10,7 +10,7 @@ public class PlayerTickHandler {
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void RaytracingUpdate(TickEvent.PlayerTickEvent event){
+    public void RaytracingUpdate(TickEvent.ClientTickEvent event){
         RayTracing.instance().fire();
 
     }

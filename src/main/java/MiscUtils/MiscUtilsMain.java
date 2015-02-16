@@ -8,7 +8,6 @@ import MiscUtils.GuideBase.Recipe.RecipeUtils;
 import MiscUtils.GuideBase.Registry.GuideModRegistry;
 import MiscUtils.Network.ChannelUtils;
 import MiscUtils.Proxies.ServerProxy;
-import MiscUtils.Register.BlockRegister;
 import MiscUtils.Register.ItemRegister;
 import MiscUtils.Utils.CraftingUtils;
 import MiscUtils.Utils.PlayerTickHandler;
@@ -19,6 +18,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -60,24 +60,23 @@ public class MiscUtilsMain
         GuideModRegistry.RegisterModToGuide(new MiscUtilsGuideInstance());
 
         ItemRegister ItemUtils = new ItemRegister(config, Id);
-        BlockRegister BlockUtils = new BlockRegister(config, Id);
+        CraftingUtils CraftingUtils = new CraftingUtils(config);
 
         ItemUtils.Register(Guide, "GuideItem");
-
-
-        CraftingUtils CraftingUtils = new CraftingUtils(config);
 
         CraftingUtils.AddShapelessRecipe(new ItemStack(Guide), new Object[]{Items.book, Items.dye, Items.paper});
 
         RecipeUtils.RegisterTypes();
 
-
+        if(event.getSide() == Side.CLIENT){
+            FMLCommonHandler.instance().bus().register(new PlayerTickHandler());
+        }
 
     }
 
     @Mod.EventHandler
     public void Init(FMLInitializationEvent event){
-        FMLCommonHandler.instance().bus().register(new PlayerTickHandler());
+
     }
 
 
