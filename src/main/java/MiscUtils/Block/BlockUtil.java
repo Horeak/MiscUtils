@@ -12,6 +12,7 @@ import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -96,8 +97,17 @@ public class BlockUtil {
             if (FMLCommonHandler.instance().getEffectiveSide().isClient())
                     return;
 
-            Explosion explosion = new Explosion(world, null, x + .5, y + .5, z + .5, 3f);
+        float strength = 3F;
+        Explosion explosion = new Explosion(world, null, x + .5, y + .5, z + .5, strength);
+
+        Block block = world.getBlock(x, y, z);
+        float res = block.getExplosionResistance(null);
+        if(block.getBlockHardness(world, x,y,z) > -1) {
+
             explosion.affectedBlockPositions.add(new ChunkPosition(x, y, z));
+        }
+
+
             explosion.doExplosionB(true);
 
             for (EntityPlayer player : (List<EntityPlayer>) world.playerEntities) {
@@ -108,5 +118,37 @@ public class BlockUtil {
                             ((EntityPlayerMP) player).playerNetServerHandler.sendPacket(new S27PacketExplosion(x + .5, y + .5, z + .5, 3f, explosion.affectedBlockPositions, null));
                     }
             }
+    }
+
+
+    public static void explodeBlocks(World world, int x, int y, int z, ArrayList<ChunkPosition> pos) {
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+            return;
+
+        float strength = 3F;
+        Explosion explosion = new Explosion(world, null, x + .5, y + .5, z + .5, strength);
+
+
+        explosion.affectedBlockPositions.add(new ChunkPosition(x, y, z));
+
+        for(ChunkPosition po : pos){
+            Block block = world.getBlock(po.chunkPosX, po.chunkPosY, po.chunkPosZ);
+            float res = block.getExplosionResistance(null);
+            if(block.getBlockHardness(world, po.chunkPosX, po.chunkPosY, po.chunkPosZ) > -1) {
+
+                explosion.affectedBlockPositions.add(po);
+            }
+        }
+
+        explosion.doExplosionB(true);
+
+        for (EntityPlayer player : (List<EntityPlayer>) world.playerEntities) {
+            if (!(player instanceof EntityPlayerMP))
+                continue;
+
+            if (player.getDistanceSq(x, y, z) < 4096) {
+                ((EntityPlayerMP) player).playerNetServerHandler.sendPacket(new S27PacketExplosion(x + .5, y + .5, z + .5, 3f, explosion.affectedBlockPositions, null));
+            }
+        }
     }
 }
