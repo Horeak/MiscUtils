@@ -50,7 +50,7 @@ public class GuideTab {
         String MissingParameter = "Missing parameter";
 
             boolean Item = !(stack.getItem() instanceof ItemBlock);
-            GameRegistry.UniqueIdentifier id = StackUtils.GetIdentifier(stack);
+            GameRegistry.UniqueIdentifier id = StackUtils.getIdentifier(stack);
 
             if(id != null) {
                 File fe = null;

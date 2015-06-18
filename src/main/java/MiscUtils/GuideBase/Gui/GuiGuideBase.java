@@ -205,7 +205,7 @@ public class GuiGuideBase extends GuiScreen {
         //TODO Make pages pages work as modules and do rendering for each instance
         if (ShowingObject && ObjectShowing != null){
             fontRendererObj.drawString(ObjectShowing.getDisplayName(), posX + textX, posY + 4, new Color(91, 91, 91).getRGB(), false);
-            fontRendererObj.drawString(EnumChatFormatting.BLUE + "" + EnumChatFormatting.ITALIC + "Mod: " + StackUtils.GetIdentifier(ObjectShowing).modId, posX + 34, posY + 12, 0xffffff);
+            fontRendererObj.drawString(EnumChatFormatting.BLUE + "" + EnumChatFormatting.ITALIC + "Mod: " + StackUtils.getIdentifier(ObjectShowing).modId, posX + 34, posY + 12, 0xffffff);
 
             if(ObjectTextForRender == null){
                 ObjectTextForRender = currentTab.GetInfoForStack(ObjectShowing);
@@ -250,7 +250,7 @@ public class GuiGuideBase extends GuiScreen {
 
                     super.drawScreen(x, y, f);
 
-                    String nm = (EnumChatFormatting.UNDERLINE) + StatCollector.translateToLocal(res.GetName());
+                    String nm = (EnumChatFormatting.UNDERLINE) + StatCollector.translateToLocal(res.getName());
 
                     fontRendererObj.drawString(nm, posX + 100 - fontRendererObj.getStringWidth(nm) / 2, posY + 20, new Color(108, 108, 108).getRGB(), false);
 

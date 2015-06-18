@@ -9,13 +9,16 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 
 public abstract class TileEntityBlockInfoRender extends TileEntitySpecialRenderer {
+
     @Override
     public void renderTileEntityAt(TileEntity te, double xx, double yy, double zz, float p_147500_8_) {
 
+	    GL11.glPushMatrix();
 
         if(FMLCommonHandler.instance().getSide() == Side.CLIENT)
             if(RayTracing.instance().getTarget() != null)
@@ -36,10 +39,15 @@ public abstract class TileEntityBlockInfoRender extends TileEntitySpecialRendere
                         ArrayList<String> Strings = new ArrayList<String>();
                         info.Info(Strings);
 
-                        if(Strings.size() > 0)
-                        RenderHelper.RenderInfoTagOverTileEntity(tile, Strings, xx, yy, zz);
+                        if(Strings.size() > 0) {
+	                        RenderHelper.fixLight();
+	                        RenderHelper.RenderInfoTagOverTileEntity(tile, Strings, xx, yy, zz);
+                        }
                     }
                 }
+
+
+	    GL11.glPopMatrix();
     }
 
 }

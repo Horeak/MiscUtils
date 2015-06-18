@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class FuranceCraftingType extends GuideRecipeTypeRender {
     @Override
-    public String GetName() {
+    public String getName() {
         return "container.furnace";
     }
 

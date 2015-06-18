@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public abstract class GuideRecipeTypeRender {
 
-    public abstract String GetName();
+    public abstract String getName();
 
     public abstract int GetRenderXSize();
     public abstract int GetRenderYSize();

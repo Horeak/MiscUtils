@@ -4,7 +4,6 @@ import MiscUtils.Utils.RayTracing;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -14,11 +13,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -27,14 +26,12 @@ public class RenderHelper {
 
     public static RenderItem itemRender = new RenderItem();
 
-
-    @Deprecated
-    public static void lightningFix(){
-        int bright = 0xF0;
-        int brightX = bright % 65536;
-        int brightY = bright / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
-    }
+	public static void fixLight(){
+		int bright = 0xF0;
+		int brightX = bright % 65536;
+		int brightY = bright / 65536;
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
+	}
 
     public static void RenderInfoTagOverTileEntity(TileEntity tile, ArrayList<String> InfoStrings, double x, double y, double z){
         MovingObjectPosition mop = RayTracing.instance().getTarget();
@@ -250,120 +247,6 @@ public class RenderHelper {
         }
 
     }
-
-
-    /**
-     * Code taken from: https://github.com/iChun/iChunUtil/blob/master/src/main/java/ichun/client/render/RendererHelper.java
-     * @author Ichun
-     */
-
-
-
-    public static void setColorFromInt(int color) {
-        float r = (color >> 16 & 255) / 255.0F;
-        float g = (color >> 8 & 255) / 255.0F;
-        float b = (color & 255) / 255.0F;
-        GL11.glColor4f(r, g, b, 1.0F);
-    }
-
-    public static void drawTextureOnScreen(ResourceLocation resource, double posX, double posY, double width, double height, double zLevel)
-    {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(resource);
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(posX , posY + height , zLevel, 0.0D, 1.0D);
-        tessellator.addVertexWithUV(posX + width, posY + height , zLevel, 1.0D, 1.0D);
-        tessellator.addVertexWithUV(posX + width, posY , zLevel, 1.0D, 0.0D);
-        tessellator.addVertexWithUV(posX , posY , zLevel, 0.0D, 0.0D);
-        tessellator.draw();
-    }
-
-    public static void drawColourOnScreen(int colour, int alpha, double posX, double posY, double width, double height, double zLevel)
-    {
-        int r = (colour >> 16 & 0xff);
-        int g = (colour >> 8 & 0xff);
-        int b = (colour & 0xff);
-        drawColourOnScreen(r, g, b, alpha, posX, posY, width, height, zLevel);
-    }
-
-    public static void drawColourOnScreen(int r, int g, int b, int alpha, double posX, double posY, double width, double height, double zLevel)
-    {
-        if(width <= 0 || height <= 0)
-        {
-            return;
-        }
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.setColorRGBA(r, g, b, alpha);
-        tessellator.addVertex(posX , posY + height , zLevel);
-        tessellator.addVertex(posX + width, posY + height , zLevel);
-        tessellator.addVertex(posX + width, posY , zLevel);
-        tessellator.addVertex(posX , posY , zLevel);
-        tessellator.draw();
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-    }
-
-    public static void startGlScissor(int x, int y, int width, int height)//From top left corner, like how Minecraft guis are. Don't forget to call endGlScissor after rendering
-    {
-        Minecraft mc = Minecraft.getMinecraft();
-        ScaledResolution reso = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-        double scaleW = (double)mc.displayWidth / reso.getScaledWidth_double();
-        double scaleH = (double)mc.displayHeight / reso.getScaledHeight_double();
-        if(width <= 0 || height <= 0)
-        {
-            return;
-        }
-        if(x < 0)
-        {
-            x = 0;
-        }
-        if(y < 0)
-        {
-            y = 0;
-        }
-        GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor((int)Math.floor((double)x * scaleW), (int)Math.floor((double)mc.displayHeight - ((double)(y + height) * scaleH)), (int)Math.floor((double)(x + width) * scaleW) - (int)Math.floor((double)x * scaleW), (int)Math.floor((double)mc.displayHeight - ((double)y * scaleH)) - (int)Math.floor((double)mc.displayHeight - ((double)(y + height) * scaleH))); //starts from lower left corner (minecraft starts from upper left)
-    }
-    public static void endGlScissor()
-    {
-        GL11.glDisable(GL11.GL_SCISSOR_TEST);
-    }
-
-    //TODO "Disabeld StencilBits by default, to prevent issues with intel cards. You must now opt-in to enabeling stencil bits by suppling the -Dforge.forceDisplayStencil=true flag."
-    public static void renderTestStencil()
-    {
-        Minecraft mc = Minecraft.getMinecraft();
-        ScaledResolution reso1 = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-        GL11.glEnable(GL11.GL_STENCIL_TEST);
-        GL11.glColorMask(false, false, false, false);
-        GL11.glDepthMask(false);
-        GL11.glStencilFunc(GL11.GL_NEVER, 1, 0xFF);
-        GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_KEEP, GL11.GL_KEEP);
-        GL11.glStencilMask(0xFF);
-        GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
-        RenderHelper.drawColourOnScreen(0xffffff, 255, 0, 0, 60, 60, 0);
-        GL11.glColorMask(true, true, true, true);
-        GL11.glDepthMask(true);
-        GL11.glStencilMask(0x00);
-        GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
-        GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
-        RenderHelper.drawColourOnScreen(0xffffff, 255, 0, 0, reso1.getScaledWidth_double(), reso1.getScaledHeight_double(), 0);
-        GL11.glDisable(GL11.GL_STENCIL_TEST);
-    }
-
-    public static void renderTestSciccor()
-    {
-        Minecraft mc = Minecraft.getMinecraft();
-        ScaledResolution reso1 = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-        RenderHelper.startGlScissor(reso1.getScaledWidth() / 2 - 50, reso1.getScaledHeight() / 2 - 50, 100, 100);
-        GL11.glPushMatrix();
-        GL11.glTranslatef(-15F, 15F, 0F);
-        RenderHelper.drawColourOnScreen(0xffffff, 255, 0, 0, reso1.getScaledWidth_double(), reso1.getScaledHeight_double(), 0);
-        GL11.glPopMatrix();
-        RenderHelper.endGlScissor();
-    }
-
 
 
 }

@@ -20,7 +20,7 @@ public class CraftingTableType extends GuideRecipeTypeRender{
 
 
     @Override
-    public String GetName() {
+    public String getName() {
         return "container.crafting";
     }
 

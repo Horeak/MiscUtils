@@ -94,7 +94,7 @@ public class StackUtils
         return AreStacksEqual(stack1, stack2, false, false, false);
     }
 
-    public static GameRegistry.UniqueIdentifier GetIdentifier(ItemStack stack){
+    public static GameRegistry.UniqueIdentifier getIdentifier(ItemStack stack){
         GameRegistry.UniqueIdentifier id = null;
 
         if(stack != null)
